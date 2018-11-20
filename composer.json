@@ -1,0 +1,15 @@
+{
+  "name": "app-review",
+  "description": "Sitio web para hacer valoraciones de productos",
+  "type": "proyect",
+  "license": "MIT",
+  "require": {
+    "slim/slim": "^3.0",
+    "slim/php-view": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "classes\\": "src/classes"
+    }
+  }
+}

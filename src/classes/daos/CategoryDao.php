@@ -113,11 +113,15 @@ class CategoryDao {
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $id_parent = $row['parent_id'];
+            $name_parent = $row['parent_name'];
             $category = new Category(null, $row['id'],$row['name'],$row['parent']);
             if ($id_parent) {
                 //es subcategoria
+                array_push($list[$name_parent]['childs'],$category);
             } else {
-                $list[$category->getName()] = $category;
+                $array = array("parentInfo" => $category,
+                               "childs" => array());
+                $list[$category->getName()] = $array;
             }
 
         };

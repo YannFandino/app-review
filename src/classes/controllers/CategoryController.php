@@ -40,7 +40,9 @@ class CategoryController {
         if (empty($result)) {
             echo $categoryDao->getError();
         } else {
-            var_dump($result);
+            foreach ($result as $array) {
+                var_dump($array);
+            }
         }
     }
 

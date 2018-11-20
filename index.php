@@ -36,6 +36,9 @@ $container['db'] = function ($c) {
 require './src/routes/route.php';
 require './src/db/DBConnection.php';
 require './src/classes/models/Category.php';
+require './src/classes/models/Product.php';
+require './src/classes/models/Review.php';
+require './src/classes/models/User.php';
 require './src/classes/daos/CategoryDao.php';
 require './src/classes/controllers/CategoryController.php';
 

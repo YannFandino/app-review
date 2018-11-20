@@ -9,10 +9,10 @@ class Category {
 
     /**
      * Category constructor.
+     * @param $row
      * @param $id
      * @param $name
      * @param $parent
-     * @param $row
      */
     public function __construct($row, $id = null, $name = null, $parent = null) {
         $this->id = $row ? $row['id'] : $id;

@@ -25,15 +25,15 @@ $app->add(function (Request $request, Response $response, callable $next) {
     return $next($request, $response);
 });
 
-// metodo que maneja cada una de las llamadas a la ruta inicial
+// Home - Página de inicio
 $app->get('/', function (Request $req, Response $res, array $args) {
-
-    // devolver siempre el objeto $response
     return $this->view->render($res, 'home.phtml', []);;
 });
 
 // Categoría
+// Añadir categoría
 $app->get('/admin/add-category/{name}[/{parent}]', CategoryController::class.":add");
 $app->get('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
 $app->get('/admin/list-category', CategoryController::class.":listAll");
+$app->get('/admin/delete-category/{id}', CategoryController::class.":delete");
 ?>

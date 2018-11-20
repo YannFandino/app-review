@@ -40,7 +40,7 @@ class CategoryDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
-            if (!$this->isCategoryExist(strtoupper($name), $parent)) {
+            if (!$this->isCategoryExist($name, $parent)) {
                 $sql = "INSERT INTO table_categories (name, parent)
                         VALUES (:name, :parent)";
                 $stmt = $db->prepare($sql);
@@ -62,7 +62,6 @@ class CategoryDao {
                 default:
                     $this->setError($e->getMessage());
             }
-
             return false;
         }
 
@@ -108,12 +107,12 @@ class CategoryDao {
                        child.*
                 FROM table_categories child LEFT JOIN table_categories parent
                 ON child.parent = parent.id
-                ORDER BY parent.name ASC";
+                ORDER BY parent_name ASC, child.parent, child.name;";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $id_parent = $row['parent_id'];
-            $name_parent = $row['parent_name'];
+            $name_parent = ucwords($row['parent_name']);
             $category = new Category(null, $row['id'],$row['name'],$row['parent']);
             if ($id_parent) {
                 //es subcategoria
@@ -123,15 +122,41 @@ class CategoryDao {
                                "childs" => array());
                 $list[$category->getName()] = $array;
             }
-
         };
         return $list;
+    }
+
+    public function deleteById($id) {
+        $db = $this->getDb();
+        $db->beginTransaction();
+        try {
+            $sql = "DELETE FROM table_categories
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result && $stmt->rowCount()) {
+                $db->commit();
+                return true;
+            } else throw new Exception('La categoría no existe.');
+        } catch (Exception $e) {
+            $db->rollBack();
+            switch ($e->getCode()) {
+                case '23000':
+                    $this->setError('No se ha podido eliminar, la categoría tiene subcategorías hijas o existen podructos en esta categoría.');
+                    break;
+                default:
+                    $this->setError($e->getMessage());
+            }
+            return false;
+        }
     }
 
     public function isCategoryExist($name, $parent) {
         $db = $this->getDb();
         $sql = "SELECT * FROM table_categories c
-                WHERE UPPER(c.name) = :name
+                WHERE c.name = :name
                 AND c.parent ";
         if (!$parent)
             $sql .= "IS NULL";

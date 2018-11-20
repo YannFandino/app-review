@@ -25,7 +25,7 @@ class Category {
     }
 
     public function getName() {
-        return $this->name;
+        return ucwords($this->name);
     }
 
     public function getParent() {

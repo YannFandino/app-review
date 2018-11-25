@@ -52,6 +52,7 @@ class CategoryDao {
                     $db->commit();
                     return true;
                 }
+                return false;
             } else throw new Exception('La categoría ya existe');
         } catch (Exception $e) {
             $db->rollBack();
@@ -126,6 +127,22 @@ class CategoryDao {
         return $list;
     }
 
+    public function getAllParents() {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT *
+                FROM table_categories
+                WHERE parent IS NULL
+                ORDER BY name ASC;";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $category = new Category($row);
+            array_push($list, $category);
+        };
+        return $list;
+    }
+
     public function deleteById($id) {
         $db = $this->getDb();
         $db->beginTransaction();
@@ -173,6 +190,4 @@ class CategoryDao {
         if ($row) return true;
         return false;
     }
-
-
 }

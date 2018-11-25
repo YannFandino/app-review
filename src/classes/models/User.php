@@ -30,7 +30,7 @@ class User {
         $this->email = $row ? $row['email'] : $email;
         $this->password = $row ? $row['password'] : $password;
         $this->date_registered = $row ? $row['date_registered'] : $date_registered;
-        $this->rol = $row ? $row['rol'] : $rol;
+        $this->rol = $row ? $row['rol_id'] : $rol;
     }
 
     public function getId() {

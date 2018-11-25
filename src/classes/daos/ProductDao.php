@@ -42,8 +42,8 @@ class ProductDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
-            if (!$this->isProductExist($name, $parent)) {
-                $sql = "INSERT INTO table_products (name, parent)
+            if (!$this->isProductExist($name)) {
+                $sql = "INSERT INTO table_products (name, parent, details, category_id)
                         VALUES (:name, :description, :details, :category_id)";
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam('name', $name);
@@ -131,7 +131,7 @@ class ProductDao {
         }
     }
 
-    public function isProductExist($name, $description, $details, $category) {
+    public function isProductExist($name) {
         $db = $this->getDb();
         $sql = "SELECT * FROM table_products c
                 WHERE c.name = :name";

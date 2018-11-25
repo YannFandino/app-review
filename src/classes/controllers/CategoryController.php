@@ -38,7 +38,7 @@ class CategoryController {
         $result = $categoryDao->getAll();
 
         if (empty($result)) {
-            $msg = $categoryDao->getError() ? $categoryDao->getError() : "No hay categorias para mostrar";
+            $msg = $categoryDao->getError() ? $categoryDao->getError() : "No ha categorias para mostrar";
             echo $msg;
         } else {
             echo "<ul>";

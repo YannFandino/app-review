@@ -44,7 +44,7 @@ class ProductDao {
         try {
             if (!$this->isProductExist($name, $parent)) {
                 $sql = "INSERT INTO table_products (name, parent)
-                        VALUES (:name, :parent)";
+                        VALUES (:name, :description, :details, :category_id)";
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam('name', $name);
                 $stmt->bindParam('description', $description, PDO::PARAM_INT);
@@ -73,7 +73,7 @@ class ProductDao {
                     SET name = :name,
                     description = :description,
                     details = :details,
-                    category = :category
+                    category_id = :category_id
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
             $stmt->bindParam('name', $name);

@@ -4,17 +4,17 @@ use Classes\daos\CategoryDao;
 
 class CategoryController {
 
-    public function add($req, $res, $args) {
-        $name = strtolower($args['name']);
-        $parent = isset($args['parent']) ? $args['parent'] : null;
+    public function add($args) {
+        $name = mb_strtolower($args['name']);
+        $parent = isset($args['parent']) ? ($args['parent'] == 0 ? null : $args['parent']) : null;
 
         $categoryDao = new CategoryDao();
         $result = $categoryDao->addCategory($name, $parent);
 
         if (!$result) {
-            echo $categoryDao->getError();
+            return array('error' => $categoryDao->getError());
         } else {
-            echo "Insertado";
+            return true;
         }
     }
 
@@ -33,27 +33,26 @@ class CategoryController {
         }
     }
 
-    public function listAll($req, $res, $args) {
+    public function listAll() {
         $categoryDao = new CategoryDao();
         $result = $categoryDao->getAll();
 
         if (empty($result)) {
-            $msg = $categoryDao->getError() ? $categoryDao->getError() : "No hay categorias para mostrar";
-            echo $msg;
+            $msg = $categoryDao->getError() ? $categoryDao->getError() : "No hay categorías para mostrar";
+            return array("error" => $msg);
         } else {
-            echo "<ul>";
-            foreach ($result as $array) {
-                $parent = $array['parentInfo'];
-                $childs = $array['childs'];
-                echo "<strong>{$parent->getName()}</strong>";
-                echo "<ul>";
-                foreach ($childs as $child) {
-                    echo "<li>{$child->getName()}</li>";
-                }
-                echo "</ul>";
-            }
-            echo "</ul>";
+            return $result;
         }
+    }
+
+    public function listAllParents() {
+        $categoryDao = new CategoryDao();
+        $result = $categoryDao->getAllParents();
+
+        if (empty($result)) {
+            return false;
+        }
+        return $result;
     }
 
     public function delete($req, $res, $args) {

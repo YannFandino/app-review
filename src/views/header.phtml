@@ -2,4 +2,14 @@
 -- Plantilla HTML para la cabecera --
 ------------------------------------>
 <header>
+<?php
+    if (isset($_SESSION['user'])) {
+        $user = $_SESSION['user'];
+        echo "<div>{$user->getUsername()}</div>
+              <div><a href='/app-review/logout'>Salir</a></div>";
+    } else {
+        echo "<a href='/app-review/login'>Iniciar Sesión</a><br>
+              <a href='/app-review/create-account'>Registro</a>";
+    }
+?>
 </header>

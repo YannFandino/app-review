@@ -5,6 +5,9 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Classes\controllers\CategoryController;
+use Classes\controllers\UserController;
+use Classes\controllers\HomeController;
+use Classes\controllers\AdminController;
 
 $app->add(function (Request $request, Response $response, callable $next) {
     $uri = $request->getUri();
@@ -25,15 +28,70 @@ $app->add(function (Request $request, Response $response, callable $next) {
     return $next($request, $response);
 });
 
-// Home - Página de inicio
-$app->get('/', function (Request $req, Response $res, array $args) {
-    return $this->view->render($res, 'home.phtml', []);;
-});
-
 // Categoría
 // Añadir categoría
 $app->get('/admin/add-category/{name}[/{parent}]', CategoryController::class.":add");
 $app->get('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
 $app->get('/admin/list-category', CategoryController::class.":listAll");
 $app->get('/admin/delete-category/{id}', CategoryController::class.":delete");
+
+// Usuario
+// Añadir usuario
+$app->get('/admin/add-user/{name}/{username}/{email}/{password}/{rol_id}', UserController::class.":add");
+$app->get('/admin/list-user', UserController::class.":listAll");
+$app->get('/admin/userByEmail/{email}', UserController::class.":getByEmail");
+$app->get('/admin/userByUsername/{username}', UserController::class.":getByUsername");
+$app->get('/admin/userByRole/{role_id}', UserController::class.":getByRole");
+$app->get('/admin/edit-user/{id}/{name}/{email}/{password}/{role_id}', UserController::class.":update");
+$app->get('/admin/delete-user/{id}', UserController::class.":delete");
+
+// Home
+// Página de inicio
+$app->get('/', function (Request $req, Response $res, array $args) {
+    return $this->view->render($res, 'home.phtml', []);;
+});
+
+// Admin Panel
+// Home
+$app->get('/admin/panel', function (Request $req, Response $res, array $args) {
+    if (isset($_SESSION['user']) && $_SESSION['user']->getRol() == 1) {
+        return $this->view->render($res, '/admin/panel-home.phtml', []);
+    } else {
+        return $res->withRedirect('/app-review', 301);
+    }
+});
+// CRUD Categoría
+$app->get('/admin/categories', function (Request $req, Response $res, array $args) {
+    $categoryController = new CategoryController();
+    $categories = $categoryController->listAll();
+    $parents = $categoryController->listAllParents();
+    $args = array("categories" => $categories,
+                  "parents" => $parents);
+    return $this->view->render($res, '/admin/categories.phtml', $args);
+});
+$app->post('/admin/categories', AdminController::class.":addCategory");
+
+// CRUD productos
+$app->get('/admin/products', function (Request $req, Response $res, array $args) {
+    $categoryController = new CategoryController();
+    $categories = $categoryController->listAll();
+    $parents = $categoryController->listAllParents();
+    $args = array("categories" => $categories,
+        "parents" => $parents);
+    return $this->view->render($res, '/admin/categories.phtml', $args);
+});
+$app->post('/admin/products', AdminController::class.":addProduct");
+
+// Login
+$app->get('/login', function (Request $req, Response $res, array $args) {
+    return $this->view->render($res, '/login.phtml', []);
+});
+$app->post('/login', HomeController::class.":login");
+// Registro
+$app->get('/create-account', function (Request $req, Response $res, array $args) {
+    return $this->view->render($res, '/create-account.phtml', []);
+});
+$app->post('/create-account', HomeController::class.":register");
+// Logout
+$app->get('/logout', HomeController::class.":logout");
 ?>

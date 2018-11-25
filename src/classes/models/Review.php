@@ -19,19 +19,19 @@ class Review {
      * @param $product
      * @param $user
      * @param $points
-     * @param $coment
+     * @param $comment
      * @param $date_created
      * @param $last_modified
      * @param $is_approved
      */
     public function __construct($row, $id = null, $product = null, $user = null, $points = null,
-                                $coment = null, $date_created = null, $last_modified = null,
+                                $comment = null, $date_created = null, $last_modified = null,
                                 $is_approved = null) {
         $this->id = $row ? $row['id'] : $id;
         $this->product = $row ? $row['product'] : $product;
         $this->user = $row ? $row['user'] : $user;
         $this->points = $row ? $row['points'] : $points;
-        $this->comment = $row ? $row['comment'] : $coment;
+        $this->comment = $row ? $row['comment'] : $comment;
         $this->date_created = $row ? $row['date_created'] : $date_created;
         $this->last_modified = $row ? $row['last_modified'] : $last_modified;
         $this->is_approved = $row ? $row['is_approved'] : $is_approved;

@@ -4,9 +4,9 @@ use Classes\daos\ReviewDao;
 
 class ReviewController {
 
-    public function add($req, $res, $args) {
-        $name = strtolower($args['product']);
-        $name = strtolower($args['user']);
+    public function add($args) {
+        $product = strtolower($args['product']);
+        $user = strtolower($args['user']);
         $points = isset($args['points']) ? $args['points'] : null;
         $comment = isset($args['comment']) ? $args['comment'] : null;
         $date_created = isset($args['date_created']) ? $args['date_created'] : null;
@@ -25,8 +25,8 @@ class ReviewController {
 
     public function update($req, $res, $args) {
         $id = $args['id'];
-        $name = strtolower($args['product']);
-        $name = strtolower($args['user']);
+        $product = strtolower($args['product']);
+        $user = strtolower($args['user']);
         $points = isset($args['points']) ? $args['points'] : null;
         $comment = isset($args['comment']) ? $args['comment'] : null;
         $date_created = isset($args['date_created']) ? $args['date_created'] : null;

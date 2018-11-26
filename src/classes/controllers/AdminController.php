@@ -41,4 +41,25 @@ class AdminController {
         }
         return $res->withRedirect('/app-review/admin/categories', 301);
     }
+
+    public function addReview($req, $res, $args) {
+        $args = array('product' => trim($req->getParam('product')),
+                      'user' => trim($req->getParam('user')),
+                      'points' => $req->getParam('points'),
+                      'comment' => trim($req->getParam('comment')),
+                      'date_created' => $req->getParam('date_created'),
+                      'last_modified' => $req->getParam('last_modified'),
+                      'is_approved' => $req->getParam('is_approved'));
+        
+        $reviewController = new ReviewController();
+        $result = $reviewController->add($args);
+
+        if (isset($result['error'])) {
+            $_SESSION['add-error'] = $result['error'];
+        }
+        return $res->withRedirect('/app-review/admin/categories', 301);
+    }
+
+
+
 }

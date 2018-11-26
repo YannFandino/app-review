@@ -40,6 +40,7 @@ class CategoryDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            if ($name == "") throw new Exception('Escriba el nombre de la categoría');
             if (!$this->isCategoryExist($name, $parent)) {
                 $sql = "INSERT INTO table_categories (name, parent)
                         VALUES (:name, :parent)";

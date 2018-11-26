@@ -33,7 +33,7 @@ class CategoryController {
         }
     }
 
-    public function listAll() {
+    public static function listAll() {
         $categoryDao = new CategoryDao();
         $result = $categoryDao->getAll();
 

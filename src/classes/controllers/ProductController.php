@@ -4,11 +4,11 @@ use Classes\daos\ProductDao;
 
 class ProductController {
 
-    public function add($req, $res, $args) {
-        $name = strtolower($args['name']);
-        $description = isset($args['description']) ? $args['description'] : null;
+    public function add($args) {
+        $name = mb_strtolower($args['name']);
+        $description = mb_strtolower($args['description']);
         $details = isset($args['details']) ? $args['details'] : null;
-        $category = isset($args['category']) ? $args['category'] : null;
+        $category = $args['category'];
 
         $productDao = new ProductDao();
         $result = $productDao->addProduct($name, $description, $details, $category);
@@ -37,25 +37,15 @@ class ProductController {
         }
     }
 
-    public function listAll($req, $res, $args) {
+    public function listAll() {
         $productDao = new ProductDao();
         $result = $productDao->getAll();
 
         if (empty($result)) {
             $msg = $productDao->getError() ? $productDao->getError() : "No hay productos para mostrar";
-            echo $msg;
+            return array("error" => $msg);
         } else {
-            echo "<ul>";
-            foreach ($result as $arrayProduct) {
-                echo "<strong>{$arrayProduct->getName()}</strong>";
-                echo "<ul>";
-                echo "<li>{$arrayProduct->getName()}</li>";
-                echo "<li>{$arrayProduct->getDescription()}</li>";
-                echo "<li>{$arrayProduct->getDetails()}</li>";
-                echo "<li>{$arrayProduct->getCategory()}</li>";
-                echo "</ul>";
-            }
-            echo "</ul>";
+            return $result;
         }
     }
 
@@ -71,5 +61,4 @@ class ProductController {
             echo "Eliminado";
         }
     }
-
 }

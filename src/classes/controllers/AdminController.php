@@ -1,6 +1,7 @@
 <?php
 namespace Classes\controllers;
 use Classes\controllers\CategoryController;
+use Classes\controllers\ProductController;
 
 class AdminController {
 
@@ -23,6 +24,21 @@ class AdminController {
         if (isset($result['error'])) {
             $_SESSION['add-error'] = $result['error'];
         }
-        return $res->withRedirect('/app-review/admin/add-category', 301);
+        return $res->withRedirect('/app-review/admin/categories', 301);
+    }
+
+    public function addProduct($req, $res, $args) {
+        $args = array('name' => trim($req->getParam('name')),
+                      'description' => trim($req->getParam('description')),
+                      'details' => trim($req->getParam('details')),
+                      'category' => $req->getParam('category'));
+
+        $productController = new ProductController();
+        $result = $productController->add($args);
+
+        if (isset($result['error'])) {
+            $_SESSION['add-error'] = $result['error'];
+        }
+        return $res->withRedirect('/app-review/admin/categories', 301);
     }
 }

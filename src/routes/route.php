@@ -5,6 +5,8 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Classes\controllers\CategoryController;
+use Classes\controllers\ProductController;
+use Classes\controllers\ReviewController;
 use Classes\controllers\UserController;
 use Classes\controllers\HomeController;
 use Classes\controllers\AdminController;
@@ -64,21 +66,19 @@ $app->get('/admin/panel', function (Request $req, Response $res, array $args) {
 $app->get('/admin/categories', function (Request $req, Response $res, array $args) {
     $categoryController = new CategoryController();
     $categories = $categoryController->listAll();
-    $parents = $categoryController->listAllParents();
-    $args = array("categories" => $categories,
-                  "parents" => $parents);
+    $args = array("categories" => $categories);
     return $this->view->render($res, '/admin/categories.phtml', $args);
 });
 $app->post('/admin/categories', AdminController::class.":addCategory");
 
 // CRUD productos
 $app->get('/admin/products', function (Request $req, Response $res, array $args) {
-    $categoryController = new CategoryController();
-    $categories = $categoryController->listAll();
-    $parents = $categoryController->listAllParents();
-    $args = array("categories" => $categories,
-        "parents" => $parents);
-    return $this->view->render($res, '/admin/categories.phtml', $args);
+    $productController = new ProductController();
+    $products = $productController->listAll();
+    $categories = CategoryController::listAll();
+    $args = array("products" => $products,
+                  "categories" => $categories);
+    return $this->view->render($res, '/admin/products.phtml', $args);
 });
 $app->post('/admin/products', AdminController::class.":addProduct");
 

@@ -50,6 +50,7 @@ if (isset($categories) && !isset($categories['error'])) {
 <?php
     if (isset($_SESSION['add-error'])) {
         echo "<div>{$_SESSION['add-error']}</div>";
+        unset($_SESSION['add-error']);
     }
 ?>
 </form>

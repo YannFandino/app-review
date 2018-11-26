@@ -97,16 +97,16 @@ class ProductDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT id, name, description, details, category_id
-                FROM table_products 
+        $sql = "SELECT *
+                FROM table_products
                 ORDER BY name ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
         while ($row = $stmt->fetch()) {
-            $product = new Product(null, $row['id'], $row['name'], $row['description'], $row['details'], $row['category_id']);
-            $list[$product->getName()] = $product;
-            };
+            $product = new Product($row);
+            array_push($list, $product);
+        };
         return $list;
     }
 

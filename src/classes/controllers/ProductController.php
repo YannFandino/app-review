@@ -1,23 +1,37 @@
 <?php
 namespace Classes\controllers;
 use Classes\daos\ProductDao;
+use Slim\Http\UploadedFile;
 
 class ProductController {
+
+    const DIR = __DIR__ . "/../../../public/img/products/";
 
     public function add($args) {
         $name = mb_strtolower($args['name']);
         $description = mb_strtolower($args['description']);
         $details = isset($args['details']) ? $args['details'] : null;
         $category = $args['category'];
+        $imgs = $args['imgs'];
 
         $productDao = new ProductDao();
-        $result = $productDao->addProduct($name, $description, $details, $category);
+        $idProduct = $productDao->addProduct($name, $description, $details, $category, $imgs);
 
-        if (!$result) {
-            echo $productDao->getError();
-        } else {
-            echo "Insertado";
+        if (!$idProduct) {
+            return array('error' => $productDao->getError());
         }
+
+        $directory = self::DIR . $idProduct;
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+        $filenames = $this->moveAndNameFile($directory, $name, $imgs);
+        $addImages = $productDao->addImages($idProduct, $filenames);
+
+        if (!$addImages) {
+            return array('error' => $productDao->getError());
+        }
+        return true;
     }
 
     public function update($req, $res, $args) {
@@ -37,7 +51,7 @@ class ProductController {
         }
     }
 
-    public function listAll() {
+    public static function listAll() {
         $productDao = new ProductDao();
         $result = $productDao->getAll();
 
@@ -60,5 +74,18 @@ class ProductController {
         } else {
             echo "Eliminado";
         }
+    }
+
+    function moveAndNameFile($directory, $productName, $imgs) {
+        $filenames = array();
+        $basename = md5($productName);
+        foreach ($imgs as $key=>$img) {
+            $extension = pathinfo($img->getClientFilename(), PATHINFO_EXTENSION);
+            $filename = sprintf('%s.%0.8s', "$key-$basename" , $extension);
+            $img->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+            array_push($filenames, $filename);
+        }
+
+        return $filenames;
     }
 }

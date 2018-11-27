@@ -73,8 +73,7 @@ $app->post('/admin/categories', AdminController::class.":addCategory");
 
 // CRUD productos
 $app->get('/admin/products', function (Request $req, Response $res, array $args) {
-    $productController = new ProductController();
-    $products = $productController->listAll();
+    $products = ProductController::listAll();
     $categories = CategoryController::listAll();
     $args = array("products" => $products,
                   "categories" => $categories);

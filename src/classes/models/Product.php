@@ -20,13 +20,13 @@ class Product {
      * @param $category
      * @param $img
      */
-    public function __construct($row, $id = null, $name = null, $description = null, $details = null, $category = null, $img = null) {
+    public function __construct($row, $id = null, $name = null, $description = null, $details = null, $category = null, array $img = null) {
         $this->id = $row ? $row['id'] : $id;
         $this->name = $row ? $row['name'] : $name;
         $this->description = $row ? $row['description'] : $description;
         $this->details = $row ? $row['details'] : $details;
-        $this->category = $row ? $row['category'] : $category;
-        $this->img = $row ? $row['img'] : $img;
+        $this->category = $row ? $row['category_id'] : $category;
+        $this->img = $row ? explode(",",$row['img']) : explode(',',$img);
     }
 
     public function getId() {

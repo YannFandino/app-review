@@ -38,23 +38,26 @@ class ProductDao {
      * @param $category
      * @return boolean
      */
-    public function addProduct($name, $description, $details, $category) {
+    public function addProduct($name, $description, $details, $category, $imgs) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            if (!$name) throw new Exception("Debe escribir el nombre del producto");
+            if (!$description) throw new Exception("Debe añadir la descripción del producto");
+            if (!$description) throw new Exception("Debe incluir la categoría del producto");
             if (!$this->isProductExist($name)) {
-                $sql = "INSERT INTO table_products (name, parent, details, category_id)
+                $sql = "INSERT INTO table_products (name, description, details, category_id)
                         VALUES (:name, :description, :details, :category_id)";
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam('name', $name);
-                $stmt->bindParam('description', $description, PDO::PARAM_INT);
-                $stmt->bindParam('details', $details, PDO::PARAM_STR);
-                $stmt->bindParam('category_id', $category, PDO::PARAM_STR);
+                $stmt->bindParam('description', $description);
+                $stmt->bindParam('details', $details);
+                $stmt->bindParam('category_id', $category, PDO::PARAM_INT);
                 $result = $stmt->execute();
-
+                $id = $db->lastInsertId();
                 if ($result) {
                     $db->commit();
-                    return true;
+                    return $id;
                 }
             } else throw new Exception('El producto ya existe');
         } catch (Exception $e) {
@@ -63,6 +66,27 @@ class ProductDao {
             return false;
         }
 
+    }
+
+    public function addImages($idProduct, $filenames) {
+        $db = $this->getDb();
+        $db->beginTransaction();
+        foreach ($filenames as $filename) {
+            try {
+                $sql = "INSERT INTO table_images (url, product_id)
+                        VALUES (:url, :product_id)";
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam('url', $filename);
+                $stmt->bindParam('product_id', $idProduct);
+                $result = $stmt->execute();
+            } catch (Exception $e) {
+                $db->rollBack();
+                $this->setError($e->getMessage());
+                return false;
+            }
+        }
+        $db->commit();
+        return true;
     }
 
     public function updateProduct($id, $name, $description, $details, $category) {
@@ -97,9 +121,11 @@ class ProductDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT *
-                FROM table_products
-                ORDER BY name ASC";
+        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img
+                FROM table_products p
+                LEFT JOIN table_images i ON p.id = i.product_id
+                GROUP BY p.id
+                ORDER BY p.name, i.url ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
@@ -144,6 +170,4 @@ class ProductDao {
         if ($row) return true;
         return false;
     }
-
-
 }

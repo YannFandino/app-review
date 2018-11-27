@@ -18,30 +18,46 @@ if (isset($products) && !isset($products['error'])) {
 }
 ?>
 </ul>
-
-<form action="" method="post">
-    <h4>Añadir producto</h4>
-    <input type="text" name="name" placeholder="Nombre del producto">
-    <textarea name="description">Descripción del producto</textarea>
-    <textarea name="details">Detalle del producto (opcional)</textarea>
-    <input type="file" name="img" multiple>
-    <select>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
-    foreach ($categories as $category) {
-        var_dump($category);
-//        echo "<option value='{$category->getId()}'>{$category->getName()}</option>";
+    if (isset($_SESSION['args'])) {
+        $name = $_SESSION['args']['name'];
+        $description = $_SESSION['args']['description'];
+        $details = $_SESSION['args']['details'];
+        $categorySelected = $_SESSION['args']['category'];
+        unset($_SESSION['args']);
     }
-}
 ?>
-    </select>
-    <button type="submit">Añadir</button>
+    <form action='' method='post' enctype='multipart/form-data'>
+        <h4>Añadir producto</h4>
+        <input type='text' name='name' placeholder='Nombre del producto' value="<?php if (isset($name)) echo $name ?>">
+        <textarea name='description' placeholder='Descripción del producto'><?php if (isset($description)) echo $description ?></textarea>
+        <textarea name='details' placeholder='Detalle del producto (opcional)'><?php if (isset($details)) echo $details ?></textarea>
+        <input type='file' name='img[]' multiple>
+        <select name='category'>
+<?php
+    foreach ($categories as $category) {
+        $parent = $category['parentInfo'];
+        $childs = $category['childs'];
+        echo "<option value='{$parent->getId()}'>{$parent->getName()}</option>";
+        foreach ($childs as $child) {
+            echo "<option value='{$child->getId()}'>&nbsp;&nbsp;&nbsp;{$child->getName()}</option>";
+        }
+    }
+?>
+        </select>
+        <button type='submit'>Añadir</button>
 <?php
     if (isset($_SESSION['add-error'])) {
         echo "<div>{$_SESSION['add-error']}</div>";
         unset($_SESSION['add-error']);
     }
 ?>
-</form>
+    </form>
+<?php
+} else {
+    echo "<div>Debe añadir categorías antes de agregar productos</div>";
+}
+?>
 
 <?php /* incluimos el footer */ include __DIR__ . '/../footer.phtml' ?>

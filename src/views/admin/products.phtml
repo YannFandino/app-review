@@ -13,6 +13,14 @@ if (isset($products) && !isset($products['error'])) {
     foreach ($products as $product) {
         var_dump($product);
     }
+
+    echo "<br><div>Para modificar un producto se usará AJAX. ";
+    echo "Para esta prueba pueden usarse las siguientes urls:</div>";
+    echo "<div>Modificar: /admin/edit-product/{id}/{name}/{description}/{details}/{category_id} &nbsp;&nbsp;&nbsp;";
+    echo "Ejemplo: /admin/edit-product/1/TV Plasma/Descripcion de TV/Detalles nuevos/1</div>";
+    echo "<div>Eliminar: /admin/delete-product/{id} &nbsp;&nbsp;&nbsp;";
+    echo "Ejemplo: /admin/delete-category/1</div>";
+
 } elseif (isset($products['error'])) {
     echo "<div>{$products['error']}</div>";
 }

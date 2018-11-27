@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS table_reviews (
   user_id INT NOT NULL,
   points FLOAT DEFAULT 0,
   comment VARCHAR(250),
-	date_crea  ted DATE NOT NULL,
+	date_created DATE NOT NULL,
 	last_modified DATE,
 	is_approved BOOLEAN DEFAULT false,
 	CONSTRAINT pk_reviews PRIMARY KEY (id),

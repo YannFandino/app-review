@@ -31,21 +31,19 @@ $app->add(function (Request $request, Response $response, callable $next) {
 });
 
 // Categoría
-// Añadir categoría
-$app->get('/admin/add-category/{name}[/{parent}]', CategoryController::class.":add");
 $app->get('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
-$app->get('/admin/list-category', CategoryController::class.":listAll");
 $app->get('/admin/delete-category/{id}', CategoryController::class.":delete");
 
 // Usuario
-// Añadir usuario
-$app->get('/admin/add-user/{name}/{username}/{email}/{password}/{rol_id}', UserController::class.":add");
-$app->get('/admin/list-user', UserController::class.":listAll");
 $app->get('/admin/userByEmail/{email}', UserController::class.":getByEmail");
 $app->get('/admin/userByUsername/{username}', UserController::class.":getByUsername");
 $app->get('/admin/userByRole/{role_id}', UserController::class.":getByRole");
 $app->get('/admin/edit-user/{id}/{name}/{email}/{password}/{role_id}', UserController::class.":update");
 $app->get('/admin/delete-user/{id}', UserController::class.":delete");
+
+// Producto
+$app->get('/admin/edit-product/{id}/{name}/{description}/{details}/{category}', ProductController::class.":update");
+$app->get('/admin/delete-product/{id}', ProductController::class.":delete");
 
 // Home
 // Página de inicio

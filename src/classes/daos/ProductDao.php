@@ -101,9 +101,10 @@ class ProductDao {
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
             $stmt->bindParam('name', $name);
-            $stmt->bindParam('description', $description, PDO::PARAM_INT);
-            $stmt->bindParam('details', $details, PDO::PARAM_STR);
-            $stmt->bindParam('category_id', $category, PDO::PARAM_STR);
+            $stmt->bindParam('description', $description);
+            $stmt->bindParam('details', $details);
+            $stmt->bindParam('category_id', $category, PDO::PARAM_INT);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
 
             if ($result) {
@@ -152,7 +153,13 @@ class ProductDao {
             } else throw new Exception('El producto no existe.');
         } catch (Exception $e) {
             $db->rollBack();
-            $this->setError($e->getMessage());
+            switch ($e->getCode()) {
+                case '23000':
+                    $this->setError('Se deben eliminar las imagenes antes de borrar el producto');
+                    break;
+                default:
+                    $this->setError($e->getMessage());
+            }
             return false;
         }
     }

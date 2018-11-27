@@ -42,7 +42,7 @@ class ProductController {
         $category = isset($args['category']) ? $args['category'] : null;
 
         $productDao = new ProductDao();
-        $result = $productDao->updateProduct($name, $description, $details, $category);
+        $result = $productDao->updateProduct($id, $name, $description, $details, $category);
 
         if (!$result) {
             echo $productDao->getError();

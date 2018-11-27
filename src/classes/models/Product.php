@@ -48,4 +48,8 @@ class Product {
     public function getCategory() {
         return $this->category;
     }
+
+    public function getImg() {
+        return $this->img;
+    }
 }

@@ -38,7 +38,7 @@ class ProductDao {
      * @param $category
      * @return boolean
      */
-    public function addProduct($name, $description, $details, $category, $imgs) {
+    public function addProduct($name, $description, $details, $category) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {

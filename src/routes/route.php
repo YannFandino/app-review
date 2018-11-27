@@ -48,7 +48,8 @@ $app->get('/admin/delete-product/{id}', ProductController::class.":delete");
 // Home
 // Página de inicio
 $app->get('/', function (Request $req, Response $res, array $args) {
-    return $this->view->render($res, 'home.phtml', []);;
+    $products = ProductController::listAll();
+    return $this->view->render($res, 'home.phtml', ['products' => $products]);
 });
 
 // Admin Panel
@@ -78,6 +79,15 @@ $app->get('/admin/products', function (Request $req, Response $res, array $args)
     return $this->view->render($res, '/admin/products.phtml', $args);
 });
 $app->post('/admin/products', AdminController::class.":addProduct");
+
+// CRUD valoraciones
+$app->get('/review', function (Request $req, Response $res, array $args) {
+    /**
+     * Codigo para las valoraciones
+     */
+    return $this->view->render($res, '/review.phtml', $args);
+});
+$app->post('/admin/review', ReviewController::class.":addReview");
 
 // Login
 $app->get('/login', function (Request $req, Response $res, array $args) {

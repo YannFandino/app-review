@@ -5,4 +5,24 @@
 <?php /* incluimos la cabecera */ include __DIR__ . '/header.phtml' ?>
 
 <h1>Portada</h1>
+
+<h2>Lista de productos</h2>
+<?php
+if (count($products) > 0) {
+    foreach ($products as $product) {
+?>
+    <div>
+        <div><?php echo $product->getName() ?></div>
+        <div><?php echo $product->getDescription() ?></div>
+        <div><?php echo $product->getDetails() ?></div>
+        <?php foreach ($product->getImg() as $img) {
+            echo "<img src='./public/img/products/{$product->getId()}/$img' width='100'/>";
+        }
+        echo "<br><a href='/app-review/valorar/{$product->getId()}'>Valorar</a>";
+        ?>
+    </div><br>
+<?php
+    }
+}
+?>
 <?php /* incluimos el footer */ include __DIR__ . '/footer.phtml' ?>

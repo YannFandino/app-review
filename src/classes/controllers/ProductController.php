@@ -15,7 +15,7 @@ class ProductController {
         $imgs = $args['imgs'];
 
         $productDao = new ProductDao();
-        $idProduct = $productDao->addProduct($name, $description, $details, $category, $imgs);
+        $idProduct = $productDao->addProduct($name, $description, $details, $category);
 
         if (!$idProduct) {
             return array('error' => $productDao->getError());
@@ -80,6 +80,7 @@ class ProductController {
         $filenames = array();
         $basename = md5($productName);
         foreach ($imgs as $key=>$img) {
+            var_dump($img);
             $extension = pathinfo($img->getClientFilename(), PATHINFO_EXTENSION);
             $filename = sprintf('%s.%0.8s', "$key-$basename" , $extension);
             $img->moveTo($directory . DIRECTORY_SEPARATOR . $filename);

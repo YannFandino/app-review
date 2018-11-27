@@ -8,7 +8,8 @@
 
 <h2>Lista de productos</h2>
 <?php
-if (count($products) > 0) {
+if (count($products) > 0 && !isset($products['error'])) {
+    echo(getType($products));
     foreach ($products as $product) {
 ?>
     <div>
@@ -23,6 +24,8 @@ if (count($products) > 0) {
     </div><br>
 <?php
     }
+} else {
+    echo $products['error'];
 }
 ?>
 <?php /* incluimos el footer */ include __DIR__ . '/footer.phtml' ?>

@@ -81,13 +81,27 @@ $app->get('/admin/products', function (Request $req, Response $res, array $args)
 $app->post('/admin/products', AdminController::class.":addProduct");
 
 // CRUD valoraciones
-$app->get('/review', function (Request $req, Response $res, array $args) {
-    /**
-     * Codigo para las valoraciones
-     */
-    return $this->view->render($res, '/review.phtml', $args);
+// Añadir
+$app->get('/add-review/{id}', function (Request $req, Response $res, array $args) {
+    $product = ProductController::getById($args['id']);
+    return $this->view->render($res, '/add-review.phtml', ["product" => $product]);
 });
-$app->post('/admin/review', ReviewController::class.":addReview");
+$app->post('/add-review/{id}', ReviewController::class.":add");
+// Listar
+$app->get('/list-review/{id}', function (Request $req, Response $res, array $args) {
+    $product = ProductController::getById($args['id']);
+    $reviews = ReviewController::listById($args['id']);
+    return $this->view->render($res, '/list-review.phtml', ["product" => $product, 'reviews' => $reviews]);
+});
+// Modificar
+$app->get('/edit-review/{id}', function (Request $req, Response $res, array $args) {
+    $product = ProductController::getById($args['id']);
+    $review = ReviewController::getByProductAndUser($product->getId(), $_SESSION['user']->getId());
+    $viewArgs = array("product"=>$product);
+    if ($review) $viewArgs['review'] = $review;
+    return $this->view->render($res, '/edit-review.phtml', $viewArgs);
+});
+$app->post('/edit-review/{id}', ReviewController::class.":update");
 
 // Login
 $app->get('/login', function (Request $req, Response $res, array $args) {

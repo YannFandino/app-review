@@ -63,6 +63,16 @@ class ProductController {
         }
     }
 
+    public static function getById($id) {
+        $productDao = new ProductDao();
+        $product = $productDao->getById($id);
+
+        if (!$product) {
+            return false;
+        }
+        return $product;
+    }
+
     public function delete($req, $res, $args) {
         $id = $args['id'];
 

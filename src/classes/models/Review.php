@@ -28,8 +28,8 @@ class Review {
                                 $comment = null, $date_created = null, $last_modified = null,
                                 $is_approved = null) {
         $this->id = $row ? $row['id'] : $id;
-        $this->product = $row ? $row['product'] : $product;
-        $this->user = $row ? $row['user'] : $user;
+        $this->product = $row ? $row['product_id'] : $product;
+        $this->user = $row ? $row['user_id'] : $user;
         $this->points = $row ? $row['points'] : $points;
         $this->comment = $row ? $row['comment'] : $comment;
         $this->date_created = $row ? $row['date_created'] : $date_created;

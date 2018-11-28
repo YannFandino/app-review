@@ -2,14 +2,15 @@
 -- Plantilla HTML para la cabecera --
 ------------------------------------>
 <header>
+    <a href='/app-review/'>Inicio</a>
 <?php
     if (isset($_SESSION['user'])) {
         $user = $_SESSION['user'];
-        echo "<div>{$user->getUsername()}</div>
-              <div><a href='/app-review/logout'>Salir</a></div>";
+        echo "<div>Hola, {$user->getUsername()}</div>";
         if ($user->getRol() == 1) {
             echo "<div><a href='/app-review/admin/panel'>Admin Panel</a></div>";
         }
+        echo "<div><a href='/app-review/logout'>Salir</a></div>";
     } else {
         echo "<a href='/app-review/login'>Iniciar Sesión</a><br>
               <a href='/app-review/create-account'>Registro</a>";

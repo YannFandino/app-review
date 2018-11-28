@@ -4,37 +4,33 @@ use Classes\daos\ReviewDao;
 
 class ReviewController {
 
-    public function add($args) {
-        $product = strtolower($args['product']);
-        $user = strtolower($args['user']);
-        $points = isset($args['points']) ? $args['points'] : null;
-        $comment = isset($args['comment']) ? $args['comment'] : null;
-        $date_created = isset($args['date_created']) ? $args['date_created'] : null;
-        $last_modified = isset($args['last_modified']) ? $args['last_modified'] : null;
-        $is_approved = isset($args['is_approved']) ? $args['is_approved'] : null;
+    public function add($req, $res, $args) {
+        $product = $req->getParam('product_id');
+        $user = $req->getParam('user_id');
+        $points = $req->getParam('points');
+        $comment = mb_strtolower($req->getParam('comment'));
 
         $reviewDao = new ReviewDao();
-        $result = $reviewDao->addReview($product, $user, $points, $comment, $date_created, $last_modified, $is_approved);
+        $result = $reviewDao->addReview($product, $user, $points, $comment);
 
         if (!$result) {
-            echo $reviewDao->getError();
+            $msg = $reviewDao->getError() ? $reviewDao->getError() : "Ha ocurrido un error al hacer una valoración";
+            echo $msg;
+//            return array("error" => $msg);
         } else {
-            echo "Insertado";
+            echo "Valoración añadida";
+//            return true;
         }
+        echo "<br><a href='/app-review/'>Inicio</a>";
     }
 
     public function update($req, $res, $args) {
-        $id = $args['id'];
-        $product = strtolower($args['product']);
-        $user = strtolower($args['user']);
-        $points = isset($args['points']) ? $args['points'] : null;
-        $comment = isset($args['comment']) ? $args['comment'] : null;
-        $date_created = isset($args['date_created']) ? $args['date_created'] : null;
-        $last_modified = isset($args['last_modified']) ? $args['last_modified'] : null;
-        $is_approved = isset($args['is_approved']) ? $args['is_approved'] : null;
+        $id = $req->getParam('id');
+        $points = $req->getParam('points');
+        $comment = mb_strtolower($req->getParam('comment'));
 
         $reviewDao = new ReviewDao();
-        $result = $reviewDao->updateReview($id, $product, $user, $points, $comment, $date_created, $last_modified, $is_approved);
+        $result = $reviewDao->updateReview($id, $points, $comment);
 
         if (!$result) {
             echo $reviewDao->getError();
@@ -66,6 +62,28 @@ class ReviewController {
             }
             echo "</ul>";
         }
+    }
+
+    public static function listById($id) {
+        $reviewDao = new ReviewDao();
+        $result = $reviewDao->listById($id);
+
+        if (empty($result)) {
+            $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
+            return array("error" => $msg);
+        } else {
+            return $result;
+        }
+    }
+
+    public static function getByProductAndUser($product, $user) {
+        $reviewDao = new ReviewDao();
+        $result = $reviewDao->isReviewExist($product, $user);
+
+        if ($result) {
+            return $result;
+        }
+        return false;
     }
 
     public function delete($req, $res, $args) {

@@ -9,7 +9,6 @@
 <h2>Lista de productos</h2>
 <?php
 if (count($products) > 0 && !isset($products['error'])) {
-    echo(getType($products));
     foreach ($products as $product) {
 ?>
     <div>
@@ -19,7 +18,9 @@ if (count($products) > 0 && !isset($products['error'])) {
         <?php foreach ($product->getImg() as $img) {
             echo "<img src='./public/img/products/{$product->getId()}/$img' width='100'/>";
         }
-        echo "<br><a href='/app-review/valorar/{$product->getId()}'>Valorar</a>";
+        echo "<br><a href='/app-review/add-review/{$product->getId()}'>Valorar</a>";
+        echo "<br><a href='/app-review/list-review/{$product->getId()}'>Ver Valoraciones</a>";
+        echo "<br><a href='/app-review/edit-review/{$product->getId()}'>Modificar Valoración</a>";
         ?>
     </div><br>
 <?php

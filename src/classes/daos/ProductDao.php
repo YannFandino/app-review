@@ -137,6 +137,23 @@ class ProductDao {
         return $list;
     }
 
+    public function getById($id) {
+        $db = $this->getDb();
+        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img
+                FROM table_products p
+                LEFT JOIN table_images i ON p.id = i.product_id
+                WHERE p.id = :id
+                GROUP BY p.id
+                ORDER BY i.url ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if ($row) return new Product($row);
+        return false;
+    }
+
     public function deleteById($id) {
         $db = $this->getDb();
         $db->beginTransaction();

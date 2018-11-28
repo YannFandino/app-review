@@ -31,28 +31,28 @@ class ReviewDao {
         return $this->error;
     }
 
-    /** Añadir nuevo prodcuto
-     * @param $name
-     * @param $description
-     * @param $details
-     * @param $category
-     * @return boolean
+    /**
+     * @param $product
+     * @param $user
+     * @param $points
+     * @param $comment
+     * @return bool
      */
-    public function addReview($product, $user, $points, $comment, $date_created, $last_modified, $is_approved) {
+    public function addReview($product, $user, $points, $comment) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            if (!$product) throw new Exception("Debe seleccionar un producto");
+            if (!$points) throw new Exception("Debe puntuar el producto");
+            if (!$comment) throw new Exception("Debe incluir incluir un");
             if (!$this->isReviewExist($product, $user)) {
-                $sql = "INSERT INTO table_reviews (product_id, user_id, points, comment, date_created, last_modified, is_approved)
-                        VALUES (:product_id, :user_id, :points, :comment, :date_created, :last_modified, :is_approved)";
+                $sql = "INSERT INTO table_reviews (product_id, user_id, points, comment, date_created)
+                        VALUES (:product_id, :user_id, :points, :comment, CURRENT_DATE)";
                 $stmt = $db->prepare($sql);
-                $stmt->bindParam('product_id', $product);
+                $stmt->bindParam('product_id', $product, PDO::PARAM_INT);
                 $stmt->bindParam('user_id', $user, PDO::PARAM_INT);
-                $stmt->bindParam('points', $points, PDO::PARAM_STR);
-                $stmt->bindParam('comment', $comment, PDO::PARAM_STR);
-                $stmt->bindParam('date_created', $date_created, PDO::PARAM_STR);
-                $stmt->bindParam('last_modified', $last_modified, PDO::PARAM_STR);
-                $stmt->bindParam('is_approved', $is_approved, PDO::PARAM_BOOL);
+                $stmt->bindParam('points', $points);
+                $stmt->bindParam('comment', $comment);
                 $result = $stmt->execute();
 
                 if ($result) {
@@ -68,27 +68,21 @@ class ReviewDao {
 
     }
 
-    public function updateReview($id, $product, $user, $points, $comment, $date_created, $last_modified, $is_approved) {
+    public function updateReview($id, $points, $comment) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
             $sql = "UPDATE table_reviews
-                    SET product_id = :product_id,
-                    user_id = :user_id,
-                    comment = :comment,
-                    date_created = :date_created,
-                    last_modified = :last_modified,
-                    is_approved = :is_approved
+                    SET points = :points,
+                        comment = :comment,
+                        last_modified = CURRENT_DATE
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('product_id', $product);
-            $stmt->bindParam('user_id', $user, PDO::PARAM_INT);
-            $stmt->bindParam('comment', $comment, PDO::PARAM_STR);
-            $stmt->bindParam('date_created', $date_created, PDO::PARAM_STR);
-            $stmt->bindParam('last_modified', $last_modified, PDO::PARAM_STR);
-            $stmt->bindParam('is_approved', $is_approved, PDO::PARAM_BOOL);
+            $stmt->bindParam('points', $points, PDO::PARAM_INT);
+            $stmt->bindParam('comment', $comment);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
-
+            
             if ($result) {
                 $db->commit();
                 return true;
@@ -117,6 +111,22 @@ class ReviewDao {
         return $list;
     }
 
+    public function listById($id) {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT * FROM table_reviews
+                WHERE product_id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $review = new Review($row);
+            array_push($list, $review);
+        };
+        return $list;
+    }
+
     public function deleteById($id) {
         $db = $this->getDb();
         $db->beginTransaction();
@@ -140,17 +150,17 @@ class ReviewDao {
 
     public function isReviewExist($product, $user) {
         $db = $this->getDb();
-        $sql = "SELECT * FROM table_reviews c
-                WHERE c.name = :name
-                AND c.user = :user";
+        $sql = "SELECT * FROM table_reviews r
+                WHERE r.product_id = :product
+                AND r.user_id = :user";
   
         $stmt = $db->prepare($sql);
-        $stmt->bindParam('name', $name);
+        $stmt->bindParam('product', $product);
         $stmt->bindParam('user', $user);
         $stmt->execute();
         $row = $stmt->fetch();
 
-        if ($row) return true;
+        if ($row) return new Review($row);
         return false;
     }
 

@@ -1,0 +1,34 @@
+<!--------------------------------------------
+-- Plantilla HTML para la pagina de portada --
+--------------------------------------------->
+<?php /* incluimos la plantilla goblal */ include __DIR__ . '/layout.phtml' ?>
+<?php /* incluimos la cabecera */ include __DIR__ . '/header.phtml' ?>
+
+<h1>Valoraciones</h1>
+
+<div><?php echo $product->getName() ?></div>
+<form action="" method="post">
+    <h4>Añadir valoracion</h4>
+    <input type="hidden" name="product_id" value="<?php echo $product->getId() ?>">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user']->getId() ?>">
+    <select name="points">
+        <option value="">Puntos</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <textarea name="comment" placeholder="Comentario del producto"></textarea>
+
+    <button type="submit">Añadir</button>
+
+    <?php
+    if (isset($_SESSION['add-error'])) {
+        echo "<div>{$_SESSION['add-error']}</div>";
+        unset($_SESSION['add-error']);
+    }
+    ?>
+</form>
+
+<?php /* incluimos el footer */ include __DIR__ . '/footer.phtml' ?>

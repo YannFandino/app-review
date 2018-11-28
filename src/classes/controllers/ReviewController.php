@@ -43,7 +43,7 @@ class ReviewController {
         }
     }
 
-    public function listAll($req, $res, $args) {
+    public function listAll() {
         $reviewDao = new ReviewDao();
         $result = $reviewDao->getAll();
 

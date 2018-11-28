@@ -42,24 +42,30 @@ class ReviewDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
-            if (!$this->isReviewExist($product, $user)) {
+            // if (!$this->isReviewExist($product, $user)) {
                 $sql = "INSERT INTO table_reviews (product_id, user_id, points, comment, date_created, last_modified, is_approved)
                         VALUES (:product_id, :user_id, :points, :comment, :date_created, :last_modified, :is_approved)";
+
                 $stmt = $db->prepare($sql);
-                $stmt->bindParam('product_id', $product);
-                $stmt->bindParam('user_id', $user, PDO::PARAM_INT);
+                // $stmt->bindParam('product_id', $product);
+                // $stmt->bindParam('user_id', $user, PDO::PARAM_INT);
+                // $stmt->bindParam('date_created', $date_created, PDO::PARAM_STR);
+                // $stmt->bindParam('last_modified', $last_modified, PDO::PARAM_STR);
+                // $stmt->bindParam('is_approved', $is_approved, PDO::PARAM_BOOL);
+                $stmt->bindParam('product_id', $a = 1);
+                $stmt->bindParam('user_id', $b =1);
                 $stmt->bindParam('points', $points, PDO::PARAM_STR);
                 $stmt->bindParam('comment', $comment, PDO::PARAM_STR);
-                $stmt->bindParam('date_created', $date_created, PDO::PARAM_STR);
-                $stmt->bindParam('last_modified', $last_modified, PDO::PARAM_STR);
-                $stmt->bindParam('is_approved', $is_approved, PDO::PARAM_BOOL);
+                $stmt->bindParam('date_created', $e='asadasa');
+                $stmt->bindParam('last_modified',$g='asasadas');
+                $stmt->bindParam('is_approved', $h=false);
                 $result = $stmt->execute();
 
                 if ($result) {
                     $db->commit();
                     return true;
                 }
-            } else throw new Exception('Ya has valorado este producto');
+            // } else throw new Exception('Ya has valorado este producto');
         } catch (Exception $e) {
             $db->rollBack();
             $this->setError($e->getMessage());
@@ -104,16 +110,16 @@ class ReviewDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT product_id, user_id, points, comment, date_created, last_modified, is_approved
+        $sql = "SELECT *
                 FROM table_reviews 
-                ORDER BY name ASC";
+                ORDER BY product_id ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
         while ($row = $stmt->fetch()) {
             $review = new Review(null, $row['id'], $row['product_id'], $row['user_id'], $row['points'], $row['comment'], $row['date_created'], $row['last_modified'], $row['is_approved']);
             $list[$review->getId()] = $review;
-            };
+        };
         return $list;
     }
 

@@ -81,13 +81,13 @@ $app->get('/admin/products', function (Request $req, Response $res, array $args)
 $app->post('/admin/products', AdminController::class.":addProduct");
 
 // CRUD valoraciones
-$app->get('/review', function (Request $req, Response $res, array $args) {
-    /**
-     * Codigo para las valoraciones
-     */
-    return $this->view->render($res, '/review.phtml', $args);
+$app->get('/admin/reviews', function (Request $req, Response $res, array $args) {
+    $reviewController = new ReviewController();
+    $reviews = $reviewController->listAll();
+    $args = array("reviews" => $reviews);
+    return $this->view->render($res, '/admin/reviews.phtml', $args);
 });
-$app->post('/admin/review', ReviewController::class.":addReview");
+$app->post('/admin/reviews', AdminController::class.":addReview");
 
 // Login
 $app->get('/login', function (Request $req, Response $res, array $args) {

@@ -6,6 +6,17 @@
 
 <h1>Valoraciones</h1>
 
+<?php
+if (isset($reviews) && !isset($reviews['error'])) {
+    foreach ($reviews as $review) {
+        var_dump($review);
+    }
+
+} elseif (isset($reviews['error'])) {
+    echo "<div>{$reviews['error']}</div>";
+}
+?>
+
 <form action="" method="post">
     <h4>Añadir valoracion</h4>
     <select name="points">

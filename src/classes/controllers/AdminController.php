@@ -69,7 +69,7 @@ class AdminController {
         if (isset($result['error'])) {
             $_SESSION['add-error'] = $result['error'];
         }
-        return $res->withRedirect('/app-review/admin/categories', 301);
+        return $res->withRedirect('/app-review/admin/reviews', 301);
     }
 
     public function checkImages(array $imgs) {

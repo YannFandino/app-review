@@ -2,7 +2,46 @@
 * Archivo global de reset, 
 * para poner a 0 todos los estilos 
 ************************************/
-
-body {
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+body, html {
   font-size: 16px;
+  min-height: 100vh;
+}
+a {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+
+/**
+  UTILS
+ */
+.clear {
+  clear: both;
+}
+.btn {
+  padding: 8px 16px;
+  border: 1px solid #FF6F00;
+  border-radius: 10px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background-color: #FF6F00;
+}
+.btn:hover {
+  border: 1px solid #585365;
+  background-color: #585365;
+}
+.btn-light {
+  color: #FF6F00;
+  background-color: #fff;
+}
+.btn-light:hover {
+  color: #FFF;
+  background-color: #585365;
 }

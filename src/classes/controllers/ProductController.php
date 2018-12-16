@@ -63,6 +63,30 @@ class ProductController {
         }
     }
 
+    public static function getPopular() {
+        $productDao = new ProductDao();
+        $result = $productDao->getPopular();
+
+        if (empty($result)) {
+            $msg = $productDao->getError() ? $productDao->getError() : "No hay productos para mostrar";
+            return array("error" => $msg);
+        } else {
+            return $result;
+        }
+    }
+
+    public static function getNewOnes() {
+        $productDao = new ProductDao();
+        $result = $productDao->getNewOnes();
+
+        if (empty($result)) {
+            $msg = $productDao->getError() ? $productDao->getError() : "No hay productos para mostrar";
+            return array("error" => $msg);
+        } else {
+            return $result;
+        }
+    }
+
     public static function getById($id) {
         $productDao = new ProductDao();
         $product = $productDao->getById($id);

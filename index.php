@@ -23,7 +23,7 @@ $container = $app->getContainer();
 $container['view'] = new \Slim\Views\PhpRenderer('./src/views/');
 
 // Importamos el resto de codigo de nuestra aplicacion
-require './src/routes/route.php';
+require './src/routes/routes.php';
 require './src/db/DBConnection.php';
 require './src/classes/models/Category.php';
 require './src/classes/models/Product.php';

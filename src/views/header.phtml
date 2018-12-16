@@ -1,19 +1,50 @@
 <!-----------------------------------
--- Plantilla HTML para la cabecera --
+-- Cabecera --
 ------------------------------------>
 <header>
-    <a href='/app-review/'>Inicio</a>
 <?php
-    if (isset($_SESSION['user'])) {
-        $user = $_SESSION['user'];
-        echo "<div>Hola, {$user->getUsername()}</div>";
-        if ($user->getRol() == 1) {
-            echo "<div><a href='/app-review/admin/panel'>Admin Panel</a></div>";
-        }
-        echo "<div><a href='/app-review/logout'>Salir</a></div>";
-    } else {
-        echo "<a href='/app-review/login'>Iniciar Sesión</a><br>
-              <a href='/app-review/create-account'>Registro</a>";
-    }
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+//var_dump($_SERVER['REQUEST_URI']);
 ?>
+    <div class="info-bar">
+        <div class="search-box">
+            <input type="text" placeholder="Buscar...">
+            <i class="material-icons">search</i>
+        </div>
+        <div class="user-box">
+<?php
+if ($user) {
+    echo "<div>Hola, {$user->getUsername()}</div>";
+//    if ($user->getRol() == 1) {
+//        echo "<div><a href='/app-review/admin/panel'>Admin Panel</a></div>";
+//    }
+//    echo "<div><a href='/app-review/logout'>Salir</a></div>";
+} else {
+    echo "<a class='btn btn-light' href='/login'>Iniciar Sesión</a>
+          <a class='btn' href='/create-account'>Registro</a>";
+}
+?>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href='/'>Inicio</a></li>
+<?php
+foreach($c as $category) {
+    $parent = $category['parentInfo'];
+    $childs = $category['childs'];
+    echo "<li><a href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
+    if ($childs) {
+        echo "<ul class='dropdown'>";
+        foreach ($childs as $child) {
+            echo "<li class='dropdown-item'><a href='/category/{$child->getId()}'>{$child->getName()}</a></li>";
+        }
+        echo "</ul>";
+    }
+    echo "</li>";
+}
+?>
+        </ul>
+    </nav>
 </header>

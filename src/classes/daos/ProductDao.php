@@ -122,11 +122,58 @@ class ProductDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img
+        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img, COUNT(DISTINCT r.id) as reviews
                 FROM table_products p
                 LEFT JOIN table_images i ON p.id = i.product_id
+                LEFT JOIN table_reviews r ON p.id = r.product_id
                 GROUP BY p.id
                 ORDER BY p.name, i.url ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $product = new Product($row);
+            array_push($list, $product);
+        };
+        return $list;
+    }
+
+    public function getPopular() {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT p.*,
+                       COUNT( DISTINCT r.id) as reviews,
+                       GROUP_CONCAT( DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
+                FROM table_products p
+                LEFT JOIN table_reviews r ON r.product_id = p.id
+                LEFT JOIN table_images i ON i.product_id = p.id
+                WHERE r.points IS NOT NULL 
+                GROUP BY p.id
+                LIMIT 4";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $product = new Product($row);
+            array_push($list, $product);
+        };
+        return $list;
+    }
+
+    public function getNewOnes() {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT p.*,
+                       COUNT( DISTINCT r.id) as reviews,
+                       GROUP_CONCAT( DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
+                FROM table_products p
+                LEFT JOIN table_reviews r ON r.product_id = p.id
+                LEFT JOIN table_images i ON i.product_id = p.id
+                GROUP BY p.id
+                ORDER BY p.id DESC
+                LIMIT 4";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 

@@ -82,7 +82,7 @@ class ReviewDao {
             $stmt->bindParam('comment', $comment);
             $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
-            
+
             if ($result) {
                 $db->commit();
                 return true;

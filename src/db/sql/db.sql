@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS table_users (
 
 CREATE TABLE IF NOT EXISTS table_products (
 	id INT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(25) NOT NULL UNIQUE,
+	name VARCHAR(100) NOT NULL UNIQUE,
 	description VARCHAR(100) NOT NULL,
 	details VARCHAR(100),
 	category_id INT NOT NULL,
@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS table_reviews (
   id INT NOT NULL AUTO_INCREMENT,
   product_id INT NOT NULL,
   user_id INT NOT NULL,
+  user_rol INT NOT NULL,
+  multiplier INT NOT NULL,
   points FLOAT DEFAULT 0,
   comment VARCHAR(250),
 	date_created DATE NOT NULL,

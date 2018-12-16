@@ -9,6 +9,7 @@ class Product {
     private $details;
     private $category;
     private $img;
+    private $nReviews;
 
     /**
      * Product constructor.
@@ -27,6 +28,7 @@ class Product {
         $this->details = $row ? $row['details'] : $details;
         $this->category = $row ? $row['category_id'] : $category;
         $this->img = $row ? explode(",",$row['img']) : explode(',',$img);
+        $this->nReviews = isset($row['reviews']) ? $row['reviews'] : null;
     }
 
     public function getId() {
@@ -52,4 +54,9 @@ class Product {
     public function getImg() {
         return $this->img;
     }
+
+    public function getNReviews() {
+        return $this->nReviews;
+    }
+
 }

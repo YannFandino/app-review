@@ -6,6 +6,7 @@ class Review {
     private $id;
     private $product;
     private $user;
+    private $multiplier;
     private $points;
     private $comment;
     private $date_created;
@@ -35,6 +36,7 @@ class Review {
         $this->date_created = $row ? $row['date_created'] : $date_created;
         $this->last_modified = $row ? $row['last_modified'] : $last_modified;
         $this->is_approved = $row ? $row['is_approved'] : $is_approved;
+        $this->is_approved = isset($row['user_rol']) ? $row['user_rol'] : null;
     }
 
     public function getId() {
@@ -67,5 +69,9 @@ class Review {
 
     public function getisApproved() {
         return $this->is_approved;
+    }
+
+    public function getMultiplier() {
+        return $this->multiplier;
     }
 }

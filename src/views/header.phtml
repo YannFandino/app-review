@@ -4,7 +4,7 @@
 <header>
 <?php
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
-//var_dump($_SERVER['REQUEST_URI']);
+$uri = $_SERVER['REQUEST_URI'];
 ?>
     <div class="info-bar">
         <div class="search-box">
@@ -14,11 +14,18 @@ $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
         <div class="user-box">
 <?php
 if ($user) {
-    echo "<div>Hola, {$user->getUsername()}</div>";
-//    if ($user->getRol() == 1) {
-//        echo "<div><a href='/app-review/admin/panel'>Admin Panel</a></div>";
-//    }
-//    echo "<div><a href='/app-review/logout'>Salir</a></div>";
+    echo "<div class='user-info'>
+              <div class='user-info-wrapper'>
+                  <div class='user-circle'>{$user->getUsername()[0]}</div>
+                  <span>{$user->getUsername()}</span>
+              </div>
+              <div class='dropdown'>";
+    if ($user->getRol() == 1) {
+        echo     "<div class='dropdown-item'><a href='/admin/panel'>Admin Panel</a></div>";
+    }
+    echo         "<div class='dropdown-item'><a href='/logout'>Salir</a></div>
+              </div>
+         </div>";
 } else {
     echo "<a class='btn btn-light' href='/login'>Iniciar Sesión</a>
           <a class='btn' href='/create-account'>Registro</a>";
@@ -29,15 +36,16 @@ if ($user) {
     </div>
     <nav>
         <ul>
-            <li><a href='/'>Inicio</a></li>
+            <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/'>Inicio</a></li>
 <?php
-foreach($c as $category) {
+foreach($c as $key => $category) {
     $parent = $category['parentInfo'];
-    $childs = $category['childs'];
-    echo "<li><a href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
-    if ($childs) {
+    $children = $category['childs'];
+    $selected = (strrpos($uri, $parent->getId())) ? 'class="selected"' : '';
+    echo "<li><a $selected href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
+    if ($children) {
         echo "<ul class='dropdown'>";
-        foreach ($childs as $child) {
+        foreach ($children as $child) {
             echo "<li class='dropdown-item'><a href='/category/{$child->getId()}'>{$child->getName()}</a></li>";
         }
         echo "</ul>";
@@ -48,3 +56,4 @@ foreach($c as $category) {
         </ul>
     </nav>
 </header>
+<body>

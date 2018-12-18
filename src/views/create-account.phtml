@@ -14,7 +14,6 @@ include __DIR__ . '/header.phtml' ?>
                 foreach ($_SESSION['error'] as $error) {
                     echo "<div>$error</div>";
                 }
-
                 unset($_SESSION['error']);
             }
             ?>

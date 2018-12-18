@@ -61,20 +61,19 @@ class HomeController {
             return $this->view->render($res, '/create-account.phtml', $args);
         }
         return $this->login($req, $res, $args);
-
     }
 
     public function logout($req, $res, $args) {
         $_SESSION = array();
         session_destroy();
-        return $res->withRedirect('/app-review', 301);
+        return $res->withRedirect('/', 301);
     }
 
     public function redirectAfterLogin(User $user, $res) {
         if ($user->getRol() == 1) {
             return $res->withRedirect('admin/panel', 301);
         } else {
-            return $res->withRedirect('/app-review', 301);
+            return $res->withRedirect('/', 301);
         }
     }
 

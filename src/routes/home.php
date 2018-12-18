@@ -47,11 +47,13 @@ $app->get('/login', function (Request $req, Response $res, array $args) {
     return $this->view->render($res, '/login.phtml', []);
 });
 $app->post('/login', HomeController::class.":login");
+
 // Registro
 $app->get('/create-account', function (Request $req, Response $res, array $args) {
     return $this->view->render($res, '/create-account.phtml', []);
 });
 $app->post('/create-account', HomeController::class.":register");
+
 // Logout
 $app->get('/logout', HomeController::class.":logout");
 

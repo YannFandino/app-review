@@ -96,7 +96,7 @@ h2.list-title {
 h2.list-title:first-of-type {
     margin-top: 24px;
 }
-    h2:before {
+    h2.list-title:before {
         content:' ';
         margin-left: 30px;
         display: inline-block;}
@@ -105,7 +105,7 @@ h2.list-title:first-of-type {
         margin-right: 8px;
     }
 .list {
-    padding: 30px;
+    padding: 30px 30px 80px 30px;
     display: flex;
     justify-content: space-between;
 }
@@ -217,3 +217,94 @@ h2.list-title:first-of-type {
         .look > a:hover {
             text-decoration: underline;
         }
+/**
+    LOGIN - REGISTRO
+ */
+div.main-box {
+    display: flex;
+    position: relative;
+    min-height: calc(100vh - 110px);
+    background-color: #3D3946;
+}
+div.main-box > div.wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 80%;
+    width: 55%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFF;
+    border-radius: 10px;
+}
+div.main-box form {
+    width: 60%;
+    box-sizing: border-box;
+    padding: 0 50px;
+    border-radius: 10px 0 0 10px;
+    }
+    div.main-box h2.form-title {
+        font-size: 1.6em;
+        margin-bottom: 24px;
+    }
+    div.main-box .form-group {
+        position: relative;
+        margin-bottom: 32px;
+    }
+    div.form-group label {
+        position: absolute;
+        top: 4px;
+        left: 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        transition: all linear 0.2s;
+    }
+    div.form-group input {
+        width: 100%;
+        height: 25px;
+        line-height: 20px;
+        border: none;
+        border-bottom: 1px solid #707070;
+        outline: none;
+    }
+    div.form-group input:focus ~ label, div.form-group input:valid ~ label {
+        top: -14px;
+        left: 0;
+        font-size: 12px;
+    }
+    div.main-box form > button.btn {
+        width: 100%;
+        padding: 12px 16px ;
+    }
+div.main-box > div.wrapper > div.aside-form {
+    width: 40%;
+    height: 100%;
+    background-color: #585365;
+    border-radius: 0 10px 10px 0;
+    text-align: center;
+}
+    div.aside-form > p {
+        margin-top: 50%;
+        font-weight: 500;
+        color: #fff;
+        padding: 24px;
+    }
+    div.aside-form > a.btn-light {
+        color: #fff;
+    }
+/**
+    FOOTER
+ */
+footer.footer {
+    display: flex;
+    height: 60px;
+    background-color: #3D3946;
+    padding: 20px 50px;
+    align-items: center;
+}
+footer.footer p {
+    margin: 0;
+    color: #eeeeee;
+}

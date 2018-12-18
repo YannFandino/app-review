@@ -39,9 +39,13 @@ a:visited {
 }
 .btn-light {
   color: #FF6F00;
-  background-color: #fff;
+  background-color: transparent;
 }
 .btn-light:hover {
   color: #FFF;
   background-color: #585365;
+}
+
+.selected {
+  color: #FF6F00;
 }

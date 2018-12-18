@@ -1,25 +1,32 @@
-<!--------------------------------------------
--- Plantilla HTML para la pagina de portada --
---------------------------------------------->
-<?php /* incluimos la plantilla goblal */
-include __DIR__ . '/layout.phtml' ?>
-<?php /* incluimos la cabecera */
-include __DIR__ . '/header.phtml' ?>
+<?php include __DIR__ . '/layout.phtml' ?>
+<?php include __DIR__ . '/header.phtml' ?>
 
-<h1>Inicio de sesión</h1>
-
-<form action="login" method="post">
-    <?php
-    if (isset($_SESSION['error'])) {
-        echo "<div>{$_SESSION['error']}</div>";
-        unset($_SESSION['error']);
-    }
-    ?>
-    <input type="text" name="username" placeholder="Nombre de usuario" value="<?php if (isset($username)) echo $username ?>"/>
-    <input type="password" name="password" placeholder="Contrasela"/>
-    <button>Entrar</button>
-</form>
-
+<div class="main-box">
+    <div class="wrapper">
+        <form action="/login" method="post">
+            <h2 class="form-title">Iniciar sesión</h2>
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo "<div>{$_SESSION['error']}</div>";
+                unset($_SESSION['error']);
+            }
+            ?>
+            <div class="form-group">
+                <input type="text" id="username" name="username" value="<?php if (isset($username)) echo $username ?>" required>
+                <label for="username">Nombre y apellidos</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" required>
+                <label for="password">Contraseña</label>
+            </div>
+            <button class="btn">Entrar</button>
+        </form>
+        <div class="aside-form">
+            <p>¿No tienes cuenta?</p>
+            <a class="btn btn-light">Registrarse</a>
+        </div>
+    </div>
+</div>
 
 <?php /* incluimos el footer */
 include __DIR__ . '/footer.phtml' ?>

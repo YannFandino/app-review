@@ -1,0 +1,31 @@
+<header>
+<?php
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+$uri = $_SERVER['REQUEST_URI'];
+?>
+    <div class="info-bar">
+        <div class="user-box">
+            <div class='user-info'>
+                  <div class='user-info-wrapper'>
+                      <div class='user-circle'><?php echo $user->getUsername()[0] ?></div>
+                      <span><?php echo $user->getUsername() ?></span>
+                      <i class="material-icons" style="margin-left: 6px;vertical-align: middle;color: #707070;">keyboard_arrow_down</i>
+                  </div>
+                  <div class='dropdown'>
+                      <div class='dropdown-item'><a href='/admin/panel'>Admin Panel</a></div>
+                      <div class='dropdown-item'><a href='/logout'>Salir</a></div>
+                  </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <nav>
+        <ul>
+            <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/'>Inicio</a></li>
+            <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/admin/panel'>Panel</a></li>
+            <li><a <?php if(strrpos($uri, 'categories')) echo "class='selected'" ?> href="categories">Añadir Categoría</a></li>
+            <li><a <?php if(strrpos($uri, 'products')) echo "class='selected'" ?> href="products">Añadir Producto</a></li>
+        </ul>
+    </nav>
+</header>
+<body>

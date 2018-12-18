@@ -34,7 +34,7 @@
         <h3 title="<?php echo $product->getName() ?>"><?php echo $product->getName() ?></h3>
         <a class="rating-link" href='/add-review/<?php echo$product->getId() ?>'>
             <div class="rating" title="Hacer una valoración">
-                <span>4.3</span>
+                <span><?php echo number_format($product->getPoints(),1) ?></span>
                 <i class='material-icons'>star</i>
             </div>
         </a>
@@ -83,7 +83,7 @@
             <h3 title="<?php echo $product->getName() ?>"><?php echo $product->getName() ?></h3>
             <a class="rating-link" href='/add-review/<?php echo$product->getId() ?>'>
                 <div class="rating" title="Hacer una valoración">
-                    <span>4.3</span>
+                    <span><?php echo $product->getPoints() ?></span>
                     <i class='material-icons'>star</i>
                 </div>
             </a>

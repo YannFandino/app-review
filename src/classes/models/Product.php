@@ -10,18 +10,21 @@ class Product {
     private $category;
     private $img;
     private $nReviews;
+    private $points;
 
     /**
      * Product constructor.
      * @param $row
-     * @param $id
-     * @param $name
-     * @param $description
-     * @param $details
-     * @param $category
-     * @param $img
+     * @param null $id
+     * @param null $name
+     * @param null $description
+     * @param null $details
+     * @param null $category
+     * @param array|null $img
+     * @param null $points
      */
-    public function __construct($row, $id = null, $name = null, $description = null, $details = null, $category = null, array $img = null) {
+    public function __construct($row, $id = null, $name = null, $description = null, $details = null, $category = null,
+                                array $img = null, $points = null) {
         $this->id = $row ? $row['id'] : $id;
         $this->name = $row ? $row['name'] : $name;
         $this->description = $row ? $row['description'] : $description;
@@ -29,6 +32,7 @@ class Product {
         $this->category = $row ? $row['category_id'] : $category;
         $this->img = $row ? explode(",",$row['img']) : explode(',',$img);
         $this->nReviews = isset($row['reviews']) ? $row['reviews'] : null;
+        $this->points = isset($row['media']) && $row['media'] ? $row['media'] : 0;
     }
 
     public function getId() {
@@ -58,5 +62,10 @@ class Product {
     public function getNReviews() {
         return $this->nReviews;
     }
+
+    public function getPoints() {
+        return $this->points;
+    }
+
 
 }

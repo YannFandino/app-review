@@ -122,12 +122,15 @@ class ProductDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img, COUNT(DISTINCT r.id) as reviews
+        $sql = "SELECT p.*,
+                       COUNT( DISTINCT r.id) as reviews,
+                       GROUP_CONCAT( DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
                 FROM table_products p
-                LEFT JOIN table_images i ON p.id = i.product_id
-                LEFT JOIN table_reviews r ON p.id = r.product_id
+                LEFT JOIN table_reviews r ON r.product_id = p.id
+                LEFT JOIN table_images i ON i.product_id = p.id
                 GROUP BY p.id
-                ORDER BY p.name, i.url ASC";
+                ORDER BY p.id ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 

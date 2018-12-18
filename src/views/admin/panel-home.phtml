@@ -1,7 +1,28 @@
 <?php include __DIR__ . '/../layout.phtml' ?>
 <?php include __DIR__ . '/header.phtml' ?>
 
-<h1>Admin Panel</h1>
+<h2 class="list-title"><i class="material-icons">dashboard</i>Productos</h2>
+<main class="list column">
+    <div class="list title row">
+        <div>Nombre</div>
+        <div>Categoría</div>
+        <div>Valoraciones</div>
+        <div>Promedio</div>
+        <div></div>
+    </div>
+<?php if (count($products) > 0 && !isset($products['error'])) {
+    foreach ($products as $product) {
+        echo "<div class='list row'>
+                  <div>{$product->getName()}</div>
+                  <div>{$product->getCategory()}</div>
+                  <div>{$product->getNReviews()}</div>
+                  <div>{$product->getPoints()}</div>
+                  <div><i class='material-icons'>edit</i></div>
+              </div>";
+    }
+}
+?>
+</main>
 
 
 

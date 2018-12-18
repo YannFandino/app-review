@@ -9,7 +9,8 @@ use Classes\controllers\AdminController;
 // Home
 $app->get('/admin/panel', function (Request $req, Response $res, array $args) {
     if (isset($_SESSION['user']) && $_SESSION['user']->getRol() == 1) {
-        return $this->view->render($res, '/admin/panel-home.phtml', []);
+        $products = ProductController::listAll();
+        return $this->view->render($res, '/admin/panel-home.phtml', ["products"=>$products]);
     } else {
         return $res->withRedirect('/', 301);
     }

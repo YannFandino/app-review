@@ -1,0 +1,16 @@
+.list.column {
+    flex-direction: column;
+}
+.list.row {
+    width: 100%;
+    padding: 16px;
+}
+.list.row div {
+    width: 20%;
+}
+.list.row div:not(:first-child) {
+    text-align: center;
+}
+.list.row.title {
+    text-align: center;
+}

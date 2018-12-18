@@ -1,6 +1,7 @@
-<!------------------------------------
--- Plantilla HTML global para todas --
-------------------------------------->
+<?php
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+$uri = $_SERVER['REQUEST_URI'];
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,6 +13,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/public/css/reset.css">
     <link rel="stylesheet" href="/public/css/style.css">
+<?php
+if ($user->getRol() == 1) {
+    echo "<link rel='stylesheet' href='/public/css/admin-styles.css'>";
+}
+?>
 </head>
 <body>
     

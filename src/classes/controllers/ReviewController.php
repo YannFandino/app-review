@@ -21,7 +21,7 @@ class ReviewController {
             echo "Valoración añadida";
 //            return true;
         }
-        echo "<br><a href='/app-review/'>Inicio</a>";
+        echo "<br><a href='/'>Inicio</a>";
     }
 
     public function update($req, $res, $args) {

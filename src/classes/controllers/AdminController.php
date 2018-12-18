@@ -24,7 +24,7 @@ class AdminController {
         if (isset($result['error'])) {
             $_SESSION['add-error'] = $result['error'];
         }
-        return $res->withRedirect('/app-review/admin/categories', 301);
+        return $res->withRedirect('/admin/categories', 301);
     }
 
     public function addProduct($req, $res, $args) {
@@ -40,7 +40,7 @@ class AdminController {
         if (isset($isImgsOk['error'])) {
             $_SESSION['add-error'] = $isImgsOk['error'];
             $_SESSION['args'] = $args;
-            return $res->withRedirect('/app-review/admin/products', 301);
+            return $res->withRedirect('/admin/products', 301);
         }
 
         $productController = new ProductController();
@@ -49,9 +49,9 @@ class AdminController {
         if (isset($result['error'])) {
             $_SESSION['add-error'] = $result['error'];
             $_SESSION['args'] = $args;
-            return $res->withRedirect('/app-review/admin/products', 301);
+            return $res->withRedirect('/admin/products', 301);
         }
-        return $res->withRedirect('/app-review/admin/products', 301);
+        return $res->withRedirect('/admin/products', 301);
     }
 
     public function addReview($req, $res, $args) {
@@ -69,7 +69,7 @@ class AdminController {
         if (isset($result['error'])) {
             $_SESSION['add-error'] = $result['error'];
         }
-        return $res->withRedirect('/app-review/admin/categories', 301);
+        return $res->withRedirect('/admin/categories', 301);
     }
 
     public function checkImages(array $imgs) {

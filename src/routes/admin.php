@@ -11,7 +11,7 @@ $app->get('/admin/panel', function (Request $req, Response $res, array $args) {
     if (isset($_SESSION['user']) && $_SESSION['user']->getRol() == 1) {
         return $this->view->render($res, '/admin/panel-home.phtml', []);
     } else {
-        return $res->withRedirect('/app-review', 301);
+        return $res->withRedirect('/', 301);
     }
 });
 

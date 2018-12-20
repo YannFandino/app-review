@@ -50,9 +50,10 @@
     width: 50%;
     padding: 0 24px;
 }
-.list h4 {
-     margin-bottom: 16px;
- }
+h2.list-title.admin-title {
+    padding: 0;
+    margin-bottom: 24px;
+}
 .category-list li {
     display: flex;
     justify-content: space-between;

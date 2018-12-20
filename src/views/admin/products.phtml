@@ -1,28 +1,8 @@
 <?php include __DIR__ . '/../layout.phtml' ?>
 <?php include __DIR__ . '/header.phtml' ?>
 
-<h1>Productos</h1>
-
-<ul>
-    <h4>Lista de productos</h4>
-<?php
-if (isset($products) && !isset($products['error'])) {
-    foreach ($products as $product) {
-        var_dump($product);
-    }
-
-    echo "<br><div>Para modificar un producto se usará AJAX. ";
-    echo "Para esta prueba pueden usarse las siguientes urls:</div>";
-    echo "<div>Modificar: /admin/edit-product/{id}/{name}/{description}/{details}/{category_id} &nbsp;&nbsp;&nbsp;";
-    echo "Ejemplo: /admin/edit-product/1/TV Plasma/Descripcion de TV/Detalles nuevos/1</div>";
-    echo "<div>Eliminar: /admin/delete-product/{id} &nbsp;&nbsp;&nbsp;";
-    echo "Ejemplo: /admin/delete-category/1</div>";
-
-} elseif (isset($products['error'])) {
-    echo "<div>{$products['error']}</div>";
-}
-?>
-</ul>
+<main class="list column">
+<h2 class="list-title admin-title" style="margin: auto; padding: 24px; box-sizing: border-box; width: 50%"><i class="material-icons">category</i>Añadir producto</h2>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
     if (isset($_SESSION['args'])) {
@@ -33,25 +13,40 @@ if (isset($categories) && !isset($categories['error'])) {
         unset($_SESSION['args']);
     }
 ?>
-    <form action='' method='post' enctype='multipart/form-data'>
-        <h4>Añadir producto</h4>
-        <input type='text' name='name' placeholder='Nombre del producto' value="<?php if (isset($name)) echo $name ?>">
-        <textarea name='description' placeholder='Descripción del producto'><?php if (isset($description)) echo $description ?></textarea>
-        <textarea name='details' placeholder='Detalle del producto (opcional)'><?php if (isset($details)) echo $details ?></textarea>
-        <input type='file' name='img[]' multiple>
-        <select name='category'>
-<?php
-    foreach ($categories as $category) {
-        $parent = $category['parentInfo'];
-        $childs = $category['childs'];
-        echo "<option value='{$parent->getId()}'>{$parent->getName()}</option>";
-        foreach ($childs as $child) {
-            echo "<option value='{$child->getId()}'>&nbsp;&nbsp;&nbsp;{$child->getName()}</option>";
-        }
-    }
-?>
-        </select>
-        <button type='submit'>Añadir</button>
+    <form class="edit" action='' method='post' name="addProduct" enctype='multipart/form-data' style="margin: auto">
+        <div class="form-group">
+            <input type='text' id="name" name='name' value="<?php if (isset($name)) echo $name ?>" required>
+            <label for="name">Nombre del producto</label>
+        </div>
+        <div class="form-group">
+            <select name='category'>
+                <option value="0">Elegir categoría</option>
+                <?php
+                foreach ($categories as $category) {
+                    $parent = $category['parentInfo'];
+                    $childs = $category['childs'];
+                    echo "<option value='{$parent->getId()}'>{$parent->getName()}</option>";
+                    foreach ($childs as $child) {
+                        echo "<option value='{$child->getId()}'>&nbsp;&nbsp;&nbsp;{$child->getName()}</option>";
+                    }
+                }
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <textarea id="description" name='description' required><?php if (isset($description)) echo $description ?></textarea>
+            <label for="description">Descripción del producto</label>
+        </div>
+        <div class="form-group">
+            <textarea id="details" name='details'><?php if (isset($details)) echo $details ?></textarea>
+            <label for="details">Detalle del producto (opcional)</label>
+        </div>
+        <div class="form-group">
+            <input type='file' id="img" name='img[]' accept="image/*" multiple>
+            <label for="img">Imágenes (Min. 1)</label>
+        </div>
+        <div id="imgs"></div>
+        <button class="btn" type='submit'>Añadir</button>
 <?php
     if (isset($_SESSION['add-error'])) {
         echo "<div>{$_SESSION['add-error']}</div>";
@@ -64,5 +59,28 @@ if (isset($categories) && !isset($categories['error'])) {
     echo "<div>Debe añadir categorías antes de agregar productos</div>";
 }
 ?>
+</main>
+<script>
+    window.onload = () => {
+        let input = document.querySelector('input[type="file"]');
+        input.addEventListener('change', (e) => {
+            let imgsDiv = document.getElementById('imgs');
+            imgsDiv.innerHTML = "";
+            let files = input.files;
+            for (let i = 0; i < files.length; i++) {
+                let reader  = new FileReader();
+                reader.onload = (e) => {
+                    let image = document.createElement("img");
+                    image.src = e.target.result;
+                    image.width = "100";
+                    image.height = "100";
+                    imgsDiv.appendChild(image);
+                }
+                console.log(files[i] instanceof File);
+                reader.readAsDataURL(files[i]);
+            }
+        })
+    }
+</script>
 
-<?php /* incluimos el footer */ include __DIR__ . '/../footer.phtml' ?>
+<?php include __DIR__ . '/../footer.phtml' ?>

@@ -3,7 +3,7 @@
 
 <main class="list">
 <ul class="category-list">
-    <h4>Categorías actuales</h4>
+    <h2 class="list-title admin-title"><i class="material-icons">category</i>Categorías actuales</h2>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
     foreach ($categories as $category) {
@@ -35,7 +35,7 @@ if (isset($categories) && !isset($categories['error'])) {
 </ul>
 
 <form class="edit" action="" method="post">
-    <h4>Añadir categoría</h4>
+    <h2 class="list-title admin-title"><i class="material-icons">note_add</i>Añadir categoría</h2>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
     echo "<div class='form-group'>

@@ -124,15 +124,11 @@ nav ul {
  */
 h2.list-title {
     font-size: 1.4em;
-    padding: 8px 0;
+    padding: 8px 30px;
 }
 h2.list-title:first-of-type {
     margin-top: 24px;
 }
-    h2.list-title:before {
-        content:' ';
-        margin-left: 30px;
-        display: inline-block;}
     h2 > i {
         vertical-align: middle;
         margin-right: 8px;
@@ -306,11 +302,21 @@ div.main-box form {
         border-bottom: 1px solid #707070;
         outline: none;
     }
+    div.form-group input[type="file"]  {
+        border: none;
+    }
+    div.form-group textarea {
+        width: 100%;
+        max-width: 100%;
+        min-height: 150px;
+        border: 1px solid #707070
+    }
     div.form-group select {
         border: 1px solid #707070;
         height: 30px;
     }
-    div.form-group input:focus ~ label, div.form-group input:valid ~ label {
+    div.form-group input:focus ~ label, div.form-group input:valid ~ label,
+    div.form-group textarea:focus ~ label, div.form-group textarea:valid ~ label {
         top: -14px;
         left: 0;
         font-size: 12px;

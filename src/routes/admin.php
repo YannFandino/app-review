@@ -24,24 +24,23 @@ $app->get('/admin/edit-user/{id}/{name}/{email}/{password}/{role_id}', UserContr
 $app->get('/admin/delete-user/{id}', UserController::class.":delete");
 
 // CRUD Categoría
-$app->post('/admin/categories', AdminController::class.":addCategory");
 $app->get('/admin/categories', function (Request $req, Response $res, array $args) {
     $categoryController = new CategoryController();
     $categories = $categoryController->listAll();
     $args = array("categories" => $categories);
     return $this->view->render($res, '/admin/categories.phtml', $args);
 });
-$app->get('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
-$app->get('/admin/delete-category/{id}', CategoryController::class.":delete");
+$app->post('/admin/categories', AdminController::class.":addCategory");
+$app->post('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
+$app->post('/admin/delete-category/{id}', CategoryController::class.":delete");
+
 // CRUD productos
-$app->post('/admin/products', AdminController::class.":addProduct");
 $app->get('/admin/products', function (Request $req, Response $res, array $args) {
-    $products = ProductController::listAll();
     $categories = CategoryController::listAll();
-    $args = array("products" => $products,
-                  "categories" => $categories);
+    $args = array("categories" => $categories);
     return $this->view->render($res, '/admin/products.phtml', $args);
 });
-$app->get('/admin/edit-product/{id}/{name}/{description}/{details}/{category}', ProductController::class.":update");
-$app->get('/admin/delete-product/{id}', ProductController::class.":delete");
+$app->post('/admin/products', AdminController::class.":addProduct");
+$app->post('/admin/edit-product/{id}/{name}/{description}/{details}/{category}', ProductController::class.":update");
+$app->post('/admin/delete-product/{id}', ProductController::class.":delete");
 ?>

@@ -1,3 +1,6 @@
+/**
+    HOME
+ */
 .list.column {
     flex-direction: column;
 }
@@ -38,4 +41,58 @@
 }
 .row.product i {
     vertical-align: bottom;
+}
+
+/**
+    CATEGORIAS
+ */
+.category-list {
+    width: 50%;
+    padding: 0 24px;
+}
+.list h4 {
+     margin-bottom: 16px;
+ }
+.category-list li {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    cursor: pointer;
+    line-height: 20px;
+}
+.category-list > li:hover, .category-list .child:hover {
+    background-color: #585365;
+}
+.category-list .parent {
+    box-sizing: border-box;
+    background-color: lightgray;
+    padding: 8px 8px 8px 24px;
+}
+    .category-list .child {
+        height: 0;
+        visibility: hidden;
+        overflow: hidden;
+        padding: 0 8px 0 32px;
+        box-sizing: border-box;
+        transition: all 0.4s ease-out;
+    }
+    .category-list .child.active {
+        visibility: visible;
+        height: auto;
+        padding: 8px 8px 8px 32px;
+    }
+.list form.edit {
+    box-sizing: border-box;
+    width: 50%;
+    padding: 0 24px;
+}
+.btn-box {
+     display: inline-block;
+}
+.btn-box i {
+    vertical-align: bottom;
+    color: #707070;
+}
+.btn-box i:hover {
+    color: #3D3946;
 }

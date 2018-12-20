@@ -1,49 +1,59 @@
 <?php include __DIR__ . '/../layout.phtml' ?>
 <?php include __DIR__ . '/header.phtml' ?>
 
-<h1>Categorías</h1>
-
-<ul>
-    <h4>Lista de categorías creadas</h4>
+<main class="list">
+<ul class="category-list">
+    <h4>Categorías actuales</h4>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
     foreach ($categories as $category) {
         $parent = $category['parentInfo'];
         $childs = $category['childs'];
-        echo "<li>{$parent->getName()} (id: {$parent->getId()})</li>";
-        echo "<ul>";
+        echo "<li class='parent'>
+                  <span>{$parent->getName()}</span>
+                  <div class='btn-box'>
+                      <i class='material-icons'>edit</i>
+                      <i class='material-icons'>delete</i>
+                  </div>
+              </li>";
+        echo "<ul class='child'>";
         foreach ($childs as $child) {
-            echo "<li>{$child->getName()} (id: {$child->getId()})</li>";
+            echo "<li>
+                      <span>{$child->getName()}</span>
+                      <div class='btn-box'>
+                          <i class='material-icons'>edit</i>
+                          <i class='material-icons'>delete</i>
+                      </div>
+                  </li>";
         }
         echo "</ul>";
     }
-    echo "<br><div>Para modificar una categoría se usará AJAX. ";
-    echo "Para esta prueba pueden usarse las siguientes urls:</div>";
-    echo "<div>Modificar: /admin/edit-category/{id}/{name}[/{parent_id}] &nbsp;&nbsp;&nbsp;";
-    echo "Ejemplo: /admin/edit-category/1/Nuevo Nombre</div>";
-    echo "<div>Eliminar: /admin/delete-category/{id} &nbsp;&nbsp;&nbsp;";
-    echo "Ejemplo: /admin/delete-category/1</div>";
 } elseif (isset($categories['error'])) {
     echo "<div>{$categories['error']}</div>";
 }
 ?>
 </ul>
 
-<form action="" method="post">
+<form class="edit" action="" method="post">
     <h4>Añadir categoría</h4>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
-    echo "<select name='parent'>";
-    echo "<option value='0'>Seleccionar padre</option>";
+    echo "<div class='form-group'>
+              <select id='parent' name='parent'>
+                  <option value='0'>Categoría padre (opcional)</option>";
     foreach ($categories as $category) {
         $parent = $category['parentInfo'];
         echo "<option value='{$parent->getId()}'>{$parent->getName()}</option>";
     }
-    echo "</select>";
+    echo "    </select>
+          </div>";
 }
 ?>
-    <input type="text" name="name" placeholder="Nombre de categoría">
-    <button type="submit">Añadir</button>
+    <div class="form-group">
+        <input type="text" id="name" name="name" required>
+        <label for="name">Nombre de categoría</label>
+    </div>
+    <button class="btn" type="submit">Añadir</button>
 <?php
     if (isset($_SESSION['add-error'])) {
         echo "<div>{$_SESSION['add-error']}</div>";
@@ -51,5 +61,16 @@ if (isset($categories) && !isset($categories['error'])) {
     }
 ?>
 </form>
-
-<?php /* incluimos el footer */ include __DIR__ . '/../footer.phtml' ?>
+</main>
+<script>
+    window.onload = () => {
+        let parents = document.querySelectorAll('.parent');
+        parents.forEach((parent) => {
+           parent.addEventListener('click', () => {
+               let childs = parent.nextSibling;
+               childs.classList.toggle('active');
+           })
+        });
+    }
+</script>
+<?php include __DIR__ . '/../footer.phtml' ?>

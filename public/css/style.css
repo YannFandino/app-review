@@ -142,6 +142,10 @@ h2.list-title:first-of-type {
     display: flex;
     justify-content: space-between;
 }
+main.list {
+    min-height: calc(100vh - 110px);
+    justify-content: flex-start;
+}
     .list .item {
         position: relative;
         width: 20%;
@@ -282,7 +286,7 @@ div.main-box form {
         font-size: 1.6em;
         margin-bottom: 24px;
     }
-    div.main-box .form-group {
+    div.form-group {
         position: relative;
         margin-bottom: 32px;
     }
@@ -294,13 +298,17 @@ div.main-box form {
         text-transform: uppercase;
         transition: all linear 0.2s;
     }
-    div.form-group input {
+    div.form-group input, div.form-group select  {
         width: 100%;
         height: 25px;
         line-height: 20px;
         border: none;
         border-bottom: 1px solid #707070;
         outline: none;
+    }
+    div.form-group select {
+        border: 1px solid #707070;
+        height: 30px;
     }
     div.form-group input:focus ~ label, div.form-group input:valid ~ label {
         top: -14px;

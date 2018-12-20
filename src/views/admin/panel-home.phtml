@@ -12,12 +12,19 @@
     </div>
 <?php if (count($products) > 0 && !isset($products['error'])) {
     foreach ($products as $product) {
-        echo "<div class='list row'>
+        echo "<div class='list row product'>
                   <div>{$product->getName()}</div>
                   <div>{$product->getCategory()}</div>
                   <div>{$product->getNReviews()}</div>
                   <div>{$product->getPoints()}</div>
-                  <div><i class='material-icons'>edit</i></div>
+                  <div>
+                    <a href='#'><!--
+                        --><i class='material-icons'>edit</i><!--       
+                 --></a>
+                    <a href='#' style='background-color: #ff1744'>
+                        <i class='material-icons'>delete</i>
+                    </a>
+                  </div>
               </div>";
     }
 }

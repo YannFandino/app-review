@@ -96,21 +96,23 @@ class UserDao {
         return false;
     }
 
-    public function updateUser($id, $name, $email, $password, $role_id) {
+    public function updateUser($id, $name = null, $email = null, $password = null, $role_id = null) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
-            $sql = "UPDATE table_users
-                    SET name = :name,
-                        email = :email,
-                        password = :password,
-                        rol_id = :rol_id
-                    WHERE id = :id";
+            $sql = "UPDATE table_users SET ";
+            if ($name) $sql .= " name = :name,";
+            if ($email) $sql .= " email = :email,";
+            if ($password) $sql .= " password = :password,";
+            if ($role_id) $sql .= " rol_id = :role_id,";
+            $sql = substr($sql, 0, strlen($sql)-1);
+            $sql .= " WHERE id = :id";
+
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('name', $name);
-            $stmt->bindParam('email', $email);
-            $stmt->bindParam('password', $password);
-            $stmt->bindParam('rol_id', $role_id);
+            if ($name) $stmt->bindParam('name', $name);
+            if ($email) $stmt->bindParam('email', $email);
+            if ($password) $stmt->bindParam('password', $password);
+            if ($role_id) $stmt->bindParam('rol_id', $role_id);
             $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
 
@@ -187,6 +189,20 @@ class UserDao {
 
         $stmt = $db->prepare($sql);
         $stmt->bindParam('username', $username);
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if ($row) return new User($row);
+        return false;
+    }
+
+    public function findById($id) {
+        $db = $this->getDb();
+        $sql = "SELECT * FROM table_users u
+                WHERE u.id = :id";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id);
         $stmt->execute();
         $row = $stmt->fetch();
 

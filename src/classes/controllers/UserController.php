@@ -53,6 +53,16 @@ class UserController {
         return false;
     }
 
+    public function getById($id) {
+        $userDao = new UserDao();
+        $result = $userDao->findById($id);
+
+        if ($result) {
+            return $result;
+        }
+        return false;
+    }
+
     public function getByRole($req, $res, $args) {
         $rol = $args['role_id'];
         $userDao = new UserDao();
@@ -65,19 +75,40 @@ class UserController {
     }
 
     public function update($req, $res, $args) {
-        $id = $args['id'];
-        $name = $args['name'];
-        $email = $args['email'];
-        $password = password_hash($args['password'], PASSWORD_DEFAULT);
-        $role_id = $args['role_id'];
+        $isOk = false;
+        $id = $req->getParam('id');
+        $name = $req->getParam('name');
+        $email = $req->getParam('email');
+        $password = null;
+        $oldPass = $req->getParam('old');
+        $newPass = $req->getParam('new');
+        $verify = $req->getParam('verify');
+        $role_id = $req->getParam('role_id');
+
+        if ($oldPass || $newPass || $verify) {
+            if (!password_verify($oldPass, $_SESSION['user']->getPassword()))
+                $_SESSION['error-pass'] = "La contraseña actual no coincide";
+            else if (!$newPass)
+                $_SESSION['error-pass'] = "Debe introducir una nueva contraseña";
+            else if ($newPass != $verify)
+                $_SESSION['error-pass'] = "No ha verificado la contraseña";
+            else
+                $isOk = true;
+        }
+
+        if ($isOk)
+            $password = password_hash($newPass, PASSWORD_DEFAULT);
+        else if (!$isOk && ($oldPass || $newPass || $verify))
+            return $res->withRedirect('/profile', 301);
 
         $userDao = new UserDao();
         $result = $userDao->updateUser($id, $name, $email, $password, $role_id);
 
         if (!$result) {
-            echo $userDao->getError();
+            $_SESSION['error-modify'] = $userDao->getError();
         } else {
-            echo "Modificado";
+            $_SESSION['user'] = $this->getById($id);
+            return $res->withRedirect('/profile', 301);
         }
     }
 

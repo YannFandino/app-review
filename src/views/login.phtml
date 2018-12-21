@@ -7,7 +7,7 @@
             <h2 class="form-title">Iniciar sesión</h2>
             <?php
             if (isset($_SESSION['error'])) {
-                echo "<div>{$_SESSION['error']}</div>";
+                echo "<div class='error'>{$_SESSION['error']}</div>";
                 unset($_SESSION['error']);
             }
             ?>

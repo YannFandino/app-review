@@ -93,7 +93,7 @@ nav ul {
             text-decoration: none;
             color: #707070;
         }
-        nav > ul li {
+        nav > ul > li {
             position: relative;
             padding: 8px 16px;
         }
@@ -113,7 +113,8 @@ nav ul {
             .dropdown li:hover, .dropdown .dropdown-item:hover {
                 background-color: #585365;
             }
-            .dropdown > .dropdown-item {
+            .dropdown > .dropdown-item a {
+                display: block;
                 padding: 8px 16px;
             }
             .dropdown a {
@@ -316,9 +317,9 @@ div.main-box form {
         height: 30px;
     }
     div.form-group input:focus ~ label, div.form-group input:valid ~ label,
-    div.form-group textarea:focus ~ label, div.form-group textarea:valid ~ label {
-        top: -14px;
-        left: 0;
+    div.form-group textarea:focus ~ label, div.form-group textarea:valid ~ label, .filled {
+        top: -14px !important;
+        left: 0 !important;
         font-size: 12px;
     }
     div.main-box form > button.btn {

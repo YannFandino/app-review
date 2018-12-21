@@ -49,3 +49,7 @@ a:visited {
 .selected {
   color: #FF6F00;
 }
+.error {
+  color: #ff1744;
+  padding: 16px 0;
+}

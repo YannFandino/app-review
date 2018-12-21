@@ -12,7 +12,7 @@ include __DIR__ . '/header.phtml' ?>
             <?php
             if (isset($_SESSION['error'])) {
                 foreach ($_SESSION['error'] as $error) {
-                    echo "<div>$error</div>";
+                    echo "<div class='error'>$error</div>";
                 }
                 unset($_SESSION['error']);
             }

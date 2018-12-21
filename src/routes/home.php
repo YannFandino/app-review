@@ -48,6 +48,12 @@ $app->get('/login', function (Request $req, Response $res, array $args) {
 });
 $app->post('/login', HomeController::class.":login");
 
+// Perfil
+$app->get('/profile', function (Request $req, Response $res, array $args) {
+    if (!isset($_SESSION['user'])) return $res->withRedirect('/', 301);
+    return $this->view->render($res, '/profile.phtml', []);
+});
+
 // Registro
 $app->get('/create-account', function (Request $req, Response $res, array $args) {
     return $this->view->render($res, '/create-account.phtml', []);
@@ -64,6 +70,7 @@ $app->get('/add-review/{id}', function (Request $req, Response $res, array $args
     return $this->view->render($res, '/add-review.phtml', ["product" => $product]);
 });
 $app->post('/add-review/{id}', ReviewController::class.":add");
+
 // Listar
 $app->get('/list-review/{id}', function (Request $req, Response $res, array $args) {
     $product = ProductController::getById($args['id']);

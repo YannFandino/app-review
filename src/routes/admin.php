@@ -20,8 +20,9 @@ $app->get('/admin/panel', function (Request $req, Response $res, array $args) {
 $app->get('/admin/userByEmail/{email}', UserController::class.":getByEmail");
 $app->get('/admin/userByUsername/{username}', UserController::class.":getByUsername");
 $app->get('/admin/userByRole/{role_id}', UserController::class.":getByRole");
-$app->get('/admin/edit-user/{id}/{name}/{email}/{password}/{role_id}', UserController::class.":update");
-$app->get('/admin/delete-user/{id}', UserController::class.":delete");
+$app->post('/admin/edit-user', UserController::class.":update");
+$app->post('/admin/edit-password', UserController::class.":update");
+$app->post('/admin/delete-user/{id}', UserController::class.":delete");
 
 // CRUD Categoría
 $app->get('/admin/categories', function (Request $req, Response $res, array $args) {

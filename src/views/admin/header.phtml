@@ -20,8 +20,8 @@
         <ul>
             <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/'>Inicio</a></li>
             <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/admin/panel'>Panel</a></li>
-            <li><a <?php if(strrpos($uri, 'products')) echo "class='selected'" ?> href="products">Añadir Producto</a></li>
-            <li><a <?php if(strrpos($uri, 'categories')) echo "class='selected'" ?> href="categories">Gestionar Categorías</a></li>
+            <li><a <?php if(strrpos($uri, 'products')) echo "class='selected'" ?> href="/admin/products">Añadir Producto</a></li>
+            <li><a <?php if(strrpos($uri, 'categories')) echo "class='selected'" ?> href="/admin/categories">Gestionar Categorías</a></li>
         </ul>
     </nav>
 </header>

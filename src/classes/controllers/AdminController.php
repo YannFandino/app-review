@@ -73,7 +73,7 @@ class AdminController {
         return $res->withRedirect('/admin/categories', 301);
     }
 
-    public function checkImages(array $imgs) {
+    static function checkImages(array $imgs) {
         if (count($imgs) > 5) {
             return array("error" => "El número máximo de imagenes es 5");
         }

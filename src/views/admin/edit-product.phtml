@@ -1,0 +1,114 @@
+<?php include __DIR__ . '/../layout.phtml' ?>
+<?php include __DIR__ . '/header.phtml' ?>
+
+<main class="list column">
+<h2 class="list-title admin-title" style="margin: auto; padding: 24px; box-sizing: border-box; width: 50%"><i class="material-icons">edit</i>Modificar producto</h2>
+<?php
+if (isset($categories) && isset($product)) {
+?>
+    <form class="edit" action='/admin/edit-product/' method='post' name="editProduct" enctype='multipart/form-data' style="margin: auto">
+        <input type="hidden" name="id" value="<?php echo $product->getId() ?>">
+        <?php
+        if (isset($_SESSION['msg'])) {
+            echo "<div class='{$_SESSION["msg"]["type"]}'>{$_SESSION['msg']['msg']}</div>";
+            unset($_SESSION['msg']);
+        }
+        ?>
+        <div class="form-group">
+            <input type='text' id="name" name='name' value="<?php echo $product->getName() ?>" required>
+            <label for="name">Nombre del producto</label>
+        </div>
+        <div class="form-group">
+            <select name='category'>
+                <option value="0">Elegir categoría</option>
+                <?php
+                foreach ($categories as $category) {
+                    $parent = $category['parentInfo'];
+                    $children = $category['childs'];
+                    $selected = $product->getCategory() == $parent->getId() ? "selected":"";
+                    echo "<option value='{$parent->getId()}' $selected>{$parent->getName()}</option>";
+                    foreach ($children as $child) {
+                        $selected = $product->getCategory() == $child->getId() ? "selected":"";
+                        echo "<option value='{$child->getId()}' $selected>&nbsp;&nbsp;&nbsp;{$child->getName()}</option>";
+                    }
+                }
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <textarea id="description" name='description' required><?php echo $product->getDescription() ?></textarea>
+            <label for="description">Descripción del producto</label>
+        </div>
+        <div class="form-group">
+            <textarea id="details" name='details'><?php echo $product->getDetails() ?></textarea>
+            <label for="details">Detalle del producto (opcional)</label>
+        </div>
+        <button class="btn" type='submit'>Modificar</button>
+<?php
+    if (isset($_SESSION['error'])) {
+        echo "<div>{$_SESSION['error']}</div>";
+        unset($_SESSION['error']);
+    }
+?>
+    </form>
+
+    <h2 class="list-title admin-title" style="margin: auto; padding: 24px; box-sizing: border-box; width: 50%"><i class="material-icons">edit</i>Modificar Imagenes</h2>
+
+        <div class="form-group edit-images" >
+        <?php
+        for ($i = 0; $i < 5; $i++) {
+            $img = isset($product->getImg()[$i]) ? $product->getImg()[$i] : null;
+            echo "<form class='form-img' action='/admin/edit-img' method='post' enctype='multipart/form-data'>
+                      <input type='hidden' name='id' value='{$product->getId()}'>";
+            if ($img) {
+                $timestamp = filemtime(__DIR__.'/../../../public/img/products/'.$product->getId().DIRECTORY_SEPARATOR.$img);
+                echo "<div style='width: 100px; height: 100px;'>
+                          <img  src='/public/img/products/{$product->getId()}/{$img}?{$timestamp}' width='100' height='100'>
+                          <label class='change' for='img-{$i}'><i class='material-icons'>autorenew</i></label>
+                      </div>
+                      <input type='hidden' name='actual' value='{$img}'>";
+            } else {
+                echo "<div style='width: 100px; height: 100px;'>
+                          <label for='img-{$i}'><i class='material-icons'>add</i></label>
+                      </div>";
+            }
+                echo "<input id='img-{$i}' name='new' type='file'>
+                   </form>";
+        } ?>
+        </div>
+<?php
+} else {
+    echo "<div>Debe añadir categorías antes de agregar productos</div>";
+}
+?>
+</main>
+<script>
+    window.onload = () => {
+        let inputs = document.querySelectorAll('input[type="file"]');
+        inputs.forEach((input) => {
+            input.addEventListener('change', (e) => {
+                e.preventDefault();
+                let imgCont = input.parentElement.children[1].children[0];
+                let file = input.files[0];
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    console.log(imgCont);
+                    if (imgCont.tagName !== 'IMG') {
+                        let parentImg = input.previousSibling;
+                        let image = document.createElement("img");
+                        image.src = e.target.result;
+                        image.width = "100";
+                        image.height = "100";
+                        parentImg.appendChild(image);
+                    } else {
+                        imgCont.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+                input.parentElement.submit();
+            });
+        });
+    };
+</script>
+
+<?php include __DIR__ . '/../footer.phtml' ?>

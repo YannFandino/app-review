@@ -44,7 +44,7 @@ class ProductDao {
         try {
             if (!$name) throw new Exception("Debe escribir el nombre del producto");
             if (!$description) throw new Exception("Debe añadir la descripción del producto");
-            if (!$description) throw new Exception("Debe incluir la categoría del producto");
+            if (!$category) throw new Exception("Debe incluir la categoría del producto");
             if (!$this->isProductExist($name)) {
                 $sql = "INSERT INTO table_products (name, description, details, category_id)
                         VALUES (:name, :description, :details, :category_id)";
@@ -89,10 +89,34 @@ class ProductDao {
         return true;
     }
 
+    public function updateImage($idProduct, $filename, $oldFilename) {
+        $db = $this->getDb();
+        $db->beginTransaction();
+        try {
+            $sql = "UPDATE table_images
+                    SET url = :filename
+                    WHERE product_id = :idProduct
+                    AND url = :oldFilenale";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('filename', $filename);
+            $stmt->bindParam('idProduct', $idProduct);
+            $stmt->bindParam('oldFilenale', $oldFilename);
+            $result = $stmt->execute();
+            if ($result) $db->commit();
+        } catch (Exception $e) {
+            $db->rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
     public function updateProduct($id, $name, $description, $details, $category) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            if (!$name) throw new Exception("Debe escribir el nombre del producto");
+            if (!$description) throw new Exception("Debe añadir la descripción del producto");
+            if (!$category) throw new Exception("Debe incluir la categoría del producto");
             $sql = "UPDATE table_products
                     SET name = :name,
                     description = :description,

@@ -100,3 +100,41 @@ h2.list-title.admin-title {
 .btn-box i:hover {
     color: #3D3946;
 }
+.form-img {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+.form-img div {
+    border: 1px solid #585365;
+    position: relative;
+    cursor: pointer;
+}
+.form-img div:hover img {
+    opacity: 0.5;
+}
+.form-img div label {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    cursor: pointer;
+    color: #585365;
+}
+.form-img div .change {
+    display: none;
+}
+.form-img div:hover .change {
+    display: block;
+}
+.form-img input[type="file"]{
+    display: none;
+}
+.edit-images {
+    width: 50%;
+    margin: auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}

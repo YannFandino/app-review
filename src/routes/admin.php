@@ -41,7 +41,15 @@ $app->get('/admin/products', function (Request $req, Response $res, array $args)
     $args = array("categories" => $categories);
     return $this->view->render($res, '/admin/products.phtml', $args);
 });
+$app->get('/admin/edit-product/{id}', function (Request $req, Response $res, array $args) {
+    $categories = CategoryController::listAll();
+    $product = ProductController::getById($args['id']);
+    $args = array("categories" => $categories, "product" => $product);
+    if (!$product) throw new \Slim\Exception\NotFoundException($req, $res);
+    return $this->view->render($res, '/admin/edit-product.phtml', $args);
+});
 $app->post('/admin/products', AdminController::class.":addProduct");
-$app->post('/admin/edit-product/{id}/{name}/{description}/{details}/{category}', ProductController::class.":update");
+$app->post('/admin/edit-product', ProductController::class.":update");
+$app->post('/admin/edit-img', ProductController::class.":updateImg");
 $app->post('/admin/delete-product', ProductController::class.":delete");
 ?>

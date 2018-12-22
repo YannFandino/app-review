@@ -316,8 +316,13 @@ div.main-box form {
         border: 1px solid #707070;
         height: 30px;
     }
-    div.form-group input:focus ~ label, div.form-group input:valid ~ label,
-    div.form-group textarea:focus ~ label, div.form-group textarea:valid ~ label, .filled {
+    div.form-group input:focus + label, div.form-group input:valid + label,
+    div.form-group textarea:focus + label, div.form-group textarea:valid + label, .filled {
+        top: -14px !important;
+        left: 0 !important;
+        font-size: 12px;
+    }
+    div.form-group input:-webkit-autofill + label {
         top: -14px !important;
         left: 0 !important;
         font-size: 12px;

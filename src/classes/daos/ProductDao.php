@@ -208,6 +208,14 @@ class ProductDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            $sql = "DELETE FROM table_images
+                    WHERE product_id = :id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if (!$result) throw new Exception("Ha ocurrido un error. Comuníquese con el Administrador.");
+
             $sql = "DELETE FROM table_products
                     WHERE id = :id";
             $stmt = $db->prepare($sql);

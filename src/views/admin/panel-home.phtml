@@ -10,9 +10,10 @@
         <div>Promedio</div>
         <div></div>
     </div>
+    <div id="msg"></div>
 <?php if (count($products) > 0 && !isset($products['error'])) {
     foreach ($products as $product) {
-        echo "<div class='list row product'>
+        echo "<div class='list row product' id='{$product->getId()}'>
                   <div>{$product->getName()}</div>
                   <div>{$product->getCategory()}</div>
                   <div>{$product->getNReviews()}</div>
@@ -22,7 +23,7 @@
                         --><i class='material-icons'>edit</i><!--       
                  --></a>
                     <a href='#' style='background-color: #ff1744'>
-                        <i class='material-icons'>delete</i>
+                        <i class='material-icons' id='del-{$product->getId()}'>delete</i>
                     </a>
                   </div>
               </div>";
@@ -30,8 +31,41 @@
 }
 ?>
 </main>
+<script>
+    window.onload = () => {
+        let delBtns = document.querySelectorAll('[id*="del"]');
+        delBtns.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let confirm = window.confirm('¿Está seguro de eliminar el producto?');
+                if (confirm)
+                    deleteProduct(btn.id.split('-').pop());
+            });
+        });
+    };
 
-
-
-
+    function deleteProduct(id) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/admin/delete-product/", true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            let msg = document.getElementById('msg');
+            if (this.readyState === 4 && this.status === 200) {
+                document.getElementById(id).remove();
+                msg.classList.toggle('success');
+                msg.innerText = this.responseText;
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                msg.classList.toggle('error');
+                msg.innerText = this.responseText;
+            }
+            setTimeout(() => {
+                msg.className = "";
+                msg.innerText = ""
+            }, 3000)
+        };
+        xhr.send(`id=${id}`);
+    }
+</script>
 <?php include __DIR__ . '/../footer.phtml' ?>

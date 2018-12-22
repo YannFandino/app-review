@@ -98,15 +98,19 @@ class ProductController {
     }
 
     public function delete($req, $res, $args) {
-        $id = $args['id'];
+        $id = $req->getParam('id');
 
         $productDao = new ProductDao();
         $result = $productDao->deleteById($id);
 
         if (!$result) {
-            echo $productDao->getError();
+            return $res->withHeader("Content-Type:", "text/html")
+                            ->withStatus(400)
+                            ->write($productDao->getError());
         } else {
-            echo "Eliminado";
+            return $res->withHeader("Content-Type:", "text/html")
+                            ->withStatus(200)
+                            ->write('Producto Eliminado');
         }
     }
 

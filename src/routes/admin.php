@@ -43,5 +43,5 @@ $app->get('/admin/products', function (Request $req, Response $res, array $args)
 });
 $app->post('/admin/products', AdminController::class.":addProduct");
 $app->post('/admin/edit-product/{id}/{name}/{description}/{details}/{category}', ProductController::class.":update");
-$app->post('/admin/delete-product/{id}', ProductController::class.":delete");
+$app->post('/admin/delete-product', ProductController::class.":delete");
 ?>

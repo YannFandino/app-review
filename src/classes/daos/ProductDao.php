@@ -230,7 +230,7 @@ class ProductDao {
             $db->rollBack();
             switch ($e->getCode()) {
                 case '23000':
-                    $this->setError('Se deben eliminar las imagenes antes de borrar el producto');
+                    $this->setError('Se deben eliminar las valoraciones antes de borrar el producto');
                     break;
                 default:
                     $this->setError($e->getMessage());

@@ -11,7 +11,12 @@
         <div></div>
     </div>
     <div id="msg"></div>
-<?php if (count($products) > 0 && !isset($products['error'])) {
+<?php
+if (isset($_SESSION['success'])) {
+    echo "<div class='success'>{$_SESSION['success']}</div>";
+    unset($_SESSION['success']);
+}
+if (count($products) > 0 && !isset($products['error'])) {
     foreach ($products as $product) {
         echo "<div class='list row product' id='{$product->getId()}'>
                   <div>{$product->getName()}</div>
@@ -28,6 +33,9 @@
                   </div>
               </div>";
     }
+} else {
+    if (isset($products['error']))
+        echo "<div class='list row title'>{$products['error']}</div>";
 }
 ?>
 </main>

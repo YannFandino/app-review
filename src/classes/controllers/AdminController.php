@@ -51,7 +51,8 @@ class AdminController {
             $_SESSION['args'] = $args;
             return $res->withRedirect('/admin/products', 301);
         }
-        return $res->withRedirect('/admin/products', 301);
+        $_SESSION['success'] = "Producto añadido correctamente";
+        return $res->withRedirect("/admin/panel");
     }
 
     public function addReview($req, $res, $args) {

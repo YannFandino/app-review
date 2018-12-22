@@ -4,29 +4,32 @@
 <main class="list">
 <ul class="category-list">
     <h2 class="list-title admin-title"><i class="material-icons">category</i>Categorías actuales</h2>
+    <div class="" id="msg"></div>
 <?php
 if (isset($categories) && !isset($categories['error'])) {
     foreach ($categories as $category) {
         $parent = $category['parentInfo'];
-        $childs = $category['childs'];
+        $children = $category['childs'];
         echo "<li class='parent'>
-                  <span>{$parent->getName()}</span>
+                  <span id='{$parent->getId()}'>{$parent->getName()}</span>
                   <div class='btn-box'>
-                      <i class='material-icons'>edit</i>
-                      <i class='material-icons'>delete</i>
+                      <i class='material-icons' id='edit-{$parent->getId()}'>edit</i>
+                      <i class='material-icons' id='del-{$parent->getId()}'>delete</i>
                   </div>
               </li>";
-        echo "<ul class='child'>";
-        foreach ($childs as $child) {
-            echo "<li>
-                      <span>{$child->getName()}</span>
+        if ($children) {
+            echo "<ul class='child'>";
+            foreach ($children as $child) {
+                echo "<li>
+                      <span id='{$child->getId()}'>{$child->getName()}</span>
                       <div class='btn-box'>
-                          <i class='material-icons'>edit</i>
-                          <i class='material-icons'>delete</i>
+                          <i class='material-icons' id='edit-{$child->getId()}'>edit</i>
+                          <i class='material-icons' id='del-{$child->getId()}'>delete</i>
                       </div>
                   </li>";
+            }
+            echo "</ul>";
         }
-        echo "</ul>";
     }
 } elseif (isset($categories['error'])) {
     echo "<div>{$categories['error']}</div>";
@@ -65,12 +68,89 @@ if (isset($categories) && !isset($categories['error'])) {
 <script>
     window.onload = () => {
         let parents = document.querySelectorAll('.parent');
+        let editBtns = document.querySelectorAll('[id*="edit"]');
+        let deleteBtns = document.querySelectorAll('[id*="del"]');
         parents.forEach((parent) => {
            parent.addEventListener('click', () => {
                let childs = parent.nextSibling;
                childs.classList.toggle('active');
            })
         });
+        editBtns.forEach((btn) => {
+            let categoryId = btn.id.split('-').pop();
+            let span = document.getElementById(categoryId);
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                span.contentEditable = 'true';
+                span.classList.toggle('editable');
+                span.focus();
+            });
+            span.addEventListener('focusout', (e) => {
+                e.stopPropagation();
+                span.contentEditable = 'false';
+                span.classList.toggle('editable');
+                editCategory(categoryId, span.innerText);
+            });
+            span.addEventListener('keypress', (e) => {
+                if (e.which === 13) {
+                    span.blur();
+                }
+            });
+        });
+        deleteBtns.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let confirm = window.confirm("¿Está seguro de borrar la categoría?");
+                if (confirm) deleteCategory(btn.id.split('-').pop());
+            })
+        })
+    };
+
+    function editCategory(id, name) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/admin/edit-category/", true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            let msg = document.getElementById('msg');
+            if (this.readyState === 4 && this.status === 200) {
+                msg.classList.toggle('success');
+                msg.innerText = this.responseText;
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                msg.classList.toggle('error');
+                msg.innerText = this.responseText;
+            }
+            setTimeout(() => {
+                msg.className = "";
+                msg.innerText = ""
+            }, 3000)
+        };
+        xhr.send(`id=${id}&name=${name}`);
+    }
+
+    function deleteCategory(id) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/admin/delete-category/", true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            let msg = document.getElementById('msg');
+            if (this.readyState === 4 && this.status === 200) {
+                document.getElementById(id).parentElement.remove();
+                msg.classList.toggle('success');
+                msg.innerText = this.responseText;
+            }
+            if (this.readyState === 4 && this.status === 400) {
+                msg.classList.toggle('error');
+                msg.innerText = this.responseText;
+            }
+            setTimeout(() => {
+                msg.className = "";
+                msg.innerText = ""
+            }, 3000)
+        };
+        xhr.send(`id=${id}`);
     }
 </script>
 <?php include __DIR__ . '/../footer.phtml' ?>

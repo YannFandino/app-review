@@ -82,6 +82,9 @@ h2.list-title.admin-title {
         height: auto;
         padding: 8px 8px 8px 32px;
     }
+.editable {
+    background-color: #fff;
+}
 .list form.edit {
     box-sizing: border-box;
     width: 50%;

@@ -5,7 +5,7 @@ use Classes\daos\CategoryDao;
 class CategoryController {
 
     public function add($args) {
-        $name = mb_strtolower($args['name']);
+        $name = mb_strtolower(trim($args['name']));
         $parent = isset($args['parent']) ? ($args['parent'] == 0 ? null : $args['parent']) : null;
 
         $categoryDao = new CategoryDao();
@@ -19,17 +19,20 @@ class CategoryController {
     }
 
     public function update($req, $res, $args) {
-        $id = $args['id'];
-        $name = $args['name'];
-        $parent = isset($args['parent']) ? $args['parent'] : null;
+        $id = $req->getParam('id');
+        $name = mb_strtolower($req->getParam('name'));
 
         $categoryDao = new CategoryDao();
-        $result = $categoryDao->updateCategory($id, $name, $parent);
+        $result = $categoryDao->updateCategory($id, $name);
 
         if (!$result) {
-            echo $categoryDao->getError();
+            return $res->withHeader("Content-Type:", "text/html")
+                ->withStatus(400)
+                ->write($categoryDao->getError());
         } else {
-            echo "Modificado";
+            return $res->withHeader("Content-Type:", "text/html")
+                ->withStatus(200)
+                ->write("Categoría modificada correctamente");
         }
     }
 
@@ -56,15 +59,19 @@ class CategoryController {
     }
 
     public function delete($req, $res, $args) {
-        $id = $args['id'];
+        $id = $req->getParam('id');
 
         $categoryDao = new CategoryDao();
         $result = $categoryDao->deleteById($id);
 
         if (!$result) {
-            echo $categoryDao->getError();
+            return $res->withHeader("Content-Type:", "text/html")
+                            ->withStatus(400)
+                            ->write($categoryDao->getError());
         } else {
-            echo "Eliminada";
+            return $res->withHeader("Content-Type:", "text/html")
+                            ->withStatus(200)
+                            ->write("Eliminada correctamente");
         }
     }
 

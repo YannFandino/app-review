@@ -69,17 +69,15 @@ class CategoryDao {
 
     }
 
-    public function updateCategory($id, $name, $parent) {
+    public function updateCategory($id, $name) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
             $sql = "UPDATE table_categories
-                    SET name = :name,
-                        parent = :parent
+                    SET name = :name
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
             $stmt->bindParam('name', $name);
-            $stmt->bindParam('parent', $parent, PDO::PARAM_INT);
             $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
 
@@ -107,8 +105,8 @@ class CategoryDao {
         $sql = "SELECT parent.id as parent_id, 
                        parent.name as parent_name,
                        child.*
-                FROM table_categories child LEFT JOIN table_categories parent
-                ON child.parent = parent.id
+                FROM table_categories child
+                LEFT JOIN table_categories parent ON child.parent = parent.id
                 ORDER BY parent_name ASC, child.parent, child.name;";
         $stmt = $db->prepare($sql);
         $stmt->execute();

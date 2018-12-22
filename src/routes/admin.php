@@ -32,8 +32,8 @@ $app->get('/admin/categories', function (Request $req, Response $res, array $arg
     return $this->view->render($res, '/admin/categories.phtml', $args);
 });
 $app->post('/admin/categories', AdminController::class.":addCategory");
-$app->post('/admin/edit-category/{id}/{name}[/{parent}]', CategoryController::class.":update");
-$app->post('/admin/delete-category/{id}', CategoryController::class.":delete");
+$app->post('/admin/edit-category', CategoryController::class.":update");
+$app->post('/admin/delete-category', CategoryController::class.":delete");
 
 // CRUD productos
 $app->get('/admin/products', function (Request $req, Response $res, array $args) {

@@ -244,6 +244,7 @@ main.list {
             border-top: 1.5px solid rgba(112, 112, 112, 0.20);
         }
         .look > a {
+            color: inherit;
             font-size: 0.8em;
             font-weight: bold;
             cursor: pointer;
@@ -347,6 +348,83 @@ div.main-box > div.wrapper > div.aside-form {
     div.aside-form > a.btn-light {
         color: #fff;
     }
+/**
+    DETALLES PROD
+ */
+.img-list {
+    display: flex;
+    flex-direction: row;
+    width: 45% !important;
+}
+    .mini {
+        display: flex;
+        flex-direction: column;
+        width: 80px !important;
+        padding: 0 56px 0 32px;
+    }
+    .mini img {
+        padding: 0 0 8px 0;
+    }
+.prod-det {
+    width: 55% !important;
+}
+    .prod-det > * {
+        margin-bottom: 8px;
+    }
+    .points {
+        position: relative;
+        cursor: pointer;
+    }
+        .points > div {
+            display: none;
+            position: absolute;
+            margin-left: 8px;
+            padding: 8px;
+            font-size: 0.7em;
+            font-weight: 500;
+            color: white;
+            background-color: #585365;
+        }
+        .points > div:before {
+            position: absolute;
+            display: inline-block;
+            left: -0.4em;
+            top: 1.0em;
+            content: ' ';
+            width: 0.8em;
+            height: 0.8em;
+            border-left: 1px solid #585365;
+            border-bottom: 1px solid #585365;
+            background-color: #585365;
+            transform: rotate(45deg);
+        }
+        .points:hover > div {
+            display: inline-block;
+        }
+        .prod-info {
+            box-sizing: border-box;
+            height: 157px;
+            padding: 8px;
+        }
+        .prod-info > p {
+            max-height: 80%;
+            overflow: auto;
+        }
+        .prod-info > h4 {
+            margin-bottom: 8px;
+        }
+        .prod-info > p::-webkit-scrollbar {
+            width: 0.5em;
+        }
+
+        .prod-info > p::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+
+        .prod-info > p::-webkit-scrollbar-thumb {
+            background-color: #585365;
+            outline: 1px solid slategrey;
+        }
 /**
     FOOTER
  */

@@ -63,6 +63,14 @@ $app->post('/create-account', HomeController::class.":register");
 // Logout
 $app->get('/logout', HomeController::class.":logout");
 
+// Detalle de producto
+$app->get('/product/{id}', function (Request $req, Response $res, array $args) {
+    $product = ProductController::getById($args['id']);
+    $reviews = ReviewController::listById($args['id']);
+    $args = array("product" => $product, 'reviews' => $reviews);
+    return $this->view->render($res, '/details.phtml', $args);
+});
+
 // CRUD valoraciones
 // Añadir
 $app->get('/add-review/{id}', function (Request $req, Response $res, array $args) {

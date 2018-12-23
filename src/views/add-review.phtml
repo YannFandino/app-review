@@ -4,31 +4,135 @@
 <?php /* incluimos la plantilla goblal */ include __DIR__ . '/layout.phtml' ?>
 <?php /* incluimos la cabecera */ include __DIR__ . '/header.phtml' ?>
 
-<h1>Valoraciones</h1>
-
-<div><?php echo $product->getName() ?></div>
-<form action="" method="post">
-    <h4>Añadir valoracion</h4>
-    <input type="hidden" name="product_id" value="<?php echo $product->getId() ?>">
-    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user']->getId() ?>">
-    <select name="points">
-        <option value="">Puntos</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-    <textarea name="comment" placeholder="Comentario del producto"></textarea>
-
-    <button type="submit">Añadir</button>
-
-    <?php
-    if (isset($_SESSION['add-error'])) {
-        echo "<div>{$_SESSION['add-error']}</div>";
-        unset($_SESSION['add-error']);
+<div class="list" style="padding-bottom: 30px">
+    <div class="img-list">
+        <div class="mini">
+            <?php
+            foreach ($product->getImg() as $img) {
+                echo "<img src='/public/img/products/{$product->getId()}/$img' width='80' height='80'>";
+            }
+            ?>
+        </div>
+        <div>
+            <?php
+            echo "<img src='/public/img/products/{$product->getId()}/{$product->getImg()[0]}' width='432' height='432'>";
+            ?>
+        </div>
+    </div>
+    <div class="prod-det">
+        <h2><?php echo $product->getName() ?></h2>
+        <div class="points user-review">
+            <?php
+            $points = $product->getPoints();
+            $half = $points - floor($points);
+            $empty = floor(5 - $points);
+            for ($i = 0; $i < 5; $i++) {
+                $id = $i + 1;
+                echo "<i id='$id' class='material-icons star-icon'>star_border</i>";
+            }
+            ?>
+        </div>
+        <form class="prod-info" action="" method="post" style="padding-left: 0">
+            <input type="hidden" name="product_id" value="<?php echo $product->getId() ?>">
+            <select name="points">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <div class="form-group" style="padding-top: 16px">
+                <textarea id="details" name='comment' required></textarea>
+                <label for="details" style="top: -10px !important;">Añade tu comentario</label>
+            </div>
+            <button class="btn btn-light">Valorar</button>
+        </form>
+        <?php
+        if (isset($_SESSION['msg'])) {
+            echo "<div class='{$_SESSION['msg']['type']}'>{$_SESSION['msg']['msg']}</div>";
+            unset($_SESSION['msg']);
+        }
+        ?>
+    </div>
+</div>
+<div class="list" style="flex-direction: column">
+    <h4 id="reviews">Últimas valoraciones</h4>
+<?php
+if (isset($reviews['error'])) {
+    echo "<div style='text-align: center;padding: 8px;'>{$reviews['error']}</div>";
+    echo "<div style='text-align: center;padding: 8px;'>Deja la primera valoración.</div>";
+} else {
+    foreach ($reviews as $review) {
+    echo "<div class='review'>
+              <h4>{$review->getUsername()}</h4>
+              <div class='points'>";
+        $points = $review->getPoints();
+        $half = $points - floor($points);
+        $empty = floor(5 - $points);
+        for ($i = 0; $i < floor($points); $i++) {
+            echo "<i class='material-icons'>star</i>";
+        }
+        if ($half) echo "<i class='material-icons'>star_half</i>";
+        for ($i = 0; $i < $empty; $i++) {
+            echo "<i class='material-icons'>star_border</i>";
+        }
+        echo     "<div>$points de 5 puntos posibles</div>
+             </div>
+             <div>
+                 <p>{$review->getComment()}</p>
+             </div>
+             <div>
+                <span>{$review->getDateCreated()}</span>
+             </div>
+         </div>";
     }
-    ?>
-</form>
+}
+?>
+</div>
+<script>
+    window.onload = () => {
+        let stars = document.querySelectorAll('.star-icon');
+        stars.forEach((star) => {
+            star.addEventListener('mouseover', (e) => {
+               e.preventDefault();
+                fill(star.id);
+            });
+            star.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.forms[0].elements[1].value = star.id;
+            });
+        });
+        let points = document.querySelectorAll('.points')[0];
+        points.addEventListener('mouseout', () => {
+            let isClicked = document.forms[0].elements[1].value;
+            if (!isClicked) {
+                stars.forEach((star) => {
+                    star.innerHTML = "star_border";
+                });
+            } else {
+                fill(isClicked);
+            }
+        });
 
+        function fill(qty) {
+            for (let i = 0; i < qty; i++) {
+                let star = stars[i];
+                let previous = star.previousElementSibling;
+                let next = star.nextElementSibling;
+                while (previous) {
+                    if (previous !== this && previous.nodeType === star.ELEMENT_NODE)
+                        previous.innerHTML = "star";
+                    previous = previous.previousElementSibling;
+                }
+                while (next) {
+                    if (next !== this && next.nodeType === star.ELEMENT_NODE)
+                        next.innerHTML = "star_border";
+                    next = next.nextElementSibling;
+                }
+                star.innerHTML = "star";
+            }
+        }
+    }
+</script>
 <?php /* incluimos el footer */ include __DIR__ . '/footer.phtml' ?>

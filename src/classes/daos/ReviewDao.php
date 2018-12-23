@@ -33,24 +33,26 @@ class ReviewDao {
 
     /**
      * @param $product
-     * @param $user
+     * @param $user_id
      * @param $points
      * @param $comment
+     * @param $multiplier
      * @return bool
      */
-    public function addReview($product, $user, $points, $comment) {
+    public function addReview($product, $user_id, $multiplier, $points, $comment) {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
             if (!$product) throw new Exception("Debe seleccionar un producto");
             if (!$points) throw new Exception("Debe puntuar el producto");
-            if (!$comment) throw new Exception("Debe incluir incluir un");
-            if (!$this->isReviewExist($product, $user)) {
-                $sql = "INSERT INTO table_reviews (product_id, user_id, points, comment, date_created)
-                        VALUES (:product_id, :user_id, :points, :comment, CURRENT_DATE)";
+            if (!$comment) throw new Exception("Debe incluir incluir un comentario");
+            if (!$this->isReviewExist($product, $user_id)) {
+                $sql = "INSERT INTO table_reviews (product_id, user_id, multiplier, points, comment, date_created)
+                        VALUES (:product_id, :user_id, :multiplier, :points, :comment, CURRENT_DATE)";
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam('product_id', $product, PDO::PARAM_INT);
-                $stmt->bindParam('user_id', $user, PDO::PARAM_INT);
+                $stmt->bindParam('user_id', $user_id, PDO::PARAM_INT);
+                $stmt->bindParam('multiplier', $multiplier, PDO::PARAM_INT);
                 $stmt->bindParam('points', $points);
                 $stmt->bindParam('comment', $comment);
                 $result = $stmt->execute();
@@ -114,8 +116,10 @@ class ReviewDao {
     public function listById($id) {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT * FROM table_reviews
-                WHERE product_id = :id";
+        $sql = "SELECT r.*, u.username
+                FROM table_reviews r
+                INNER JOIN table_users u ON r.user_id = u.id
+                WHERE product_id = 18";
         $stmt = $db->prepare($sql);
         $stmt->bindParam('id', $id, PDO::PARAM_INT);
         $stmt->execute();

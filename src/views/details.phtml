@@ -41,17 +41,42 @@
             <h4>Detalles</h4>
             <p><?php echo $product->getDetails() ?></p>
         </div>
-        <a href="#" class="btn btn-light">Valorar</a>
+        <a href="/add-review/<?php echo $product->getId() ?>" class="btn btn-light">Valorar</a>
     </div>
 </div>
-<div class="list column">
+<div class="list" style="flex-direction: column">
     <h4>Últimas valoraciones</h4>
-    <?php
-    if ($reviews['error']) {
-        echo "<div style='text-align: center;padding: 8px;'>{$reviews['error']}</div>";
-        echo "<div style='text-align: center;padding: 8px;'>Deja la primera valoración.</div>";
+<?php
+if (isset($reviews['error'])) {
+    echo "<div style='text-align: center;padding: 8px;'>{$reviews['error']}</div>";
+    echo "<div style='text-align: center;padding: 8px;'>Deja la primera valoración.</div>";
+} else {
+    foreach ($reviews as $review) {
+        echo "<div class='review'>
+          <h4>{$review->getUsername()}</h4>
+          <div class='points'>";
+        $points = $review->getPoints();
+        $half = $points - floor($points);
+        $empty = floor(5 - $points);
+        for ($i = 0; $i < floor($points); $i++) {
+            echo "<i class='material-icons'>star</i>";
+        }
+        if ($half) echo "<i class='material-icons'>star_half</i>";
+        for ($i = 0; $i < $empty; $i++) {
+            echo "<i class='material-icons'>star_border</i>";
+        }
+        echo     "<div>$points de 5 puntos posibles</div>
+         </div>
+         <div>
+             <p>{$review->getComment()}</p>
+         </div>
+         <div>
+            <span>{$review->getDateCreated()}</span>
+         </div>
+     </div>";
     }
-    ?>
+}
+?>
 </div>
 
 <?php include __DIR__ . '/footer.phtml' ?>

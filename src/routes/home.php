@@ -75,7 +75,9 @@ $app->get('/product/{id}', function (Request $req, Response $res, array $args) {
 // Añadir
 $app->get('/add-review/{id}', function (Request $req, Response $res, array $args) {
     $product = ProductController::getById($args['id']);
-    return $this->view->render($res, '/add-review.phtml', ["product" => $product]);
+    $reviews = ReviewController::listById($args['id']);
+    $args = array("product" => $product, 'reviews' => $reviews);
+    return $this->view->render($res, '/add-review.phtml', $args);
 });
 $app->post('/add-review/{id}', ReviewController::class.":add");
 

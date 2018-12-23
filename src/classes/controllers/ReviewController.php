@@ -1,27 +1,35 @@
 <?php
 namespace Classes\controllers;
 use Classes\daos\ReviewDao;
+use Classes\models\User;
 
 class ReviewController {
 
     public function add($req, $res, $args) {
         $product = $req->getParam('product_id');
-        $user = $req->getParam('user_id');
+        $user = $_SESSION['user'];
+        if (!$user) {
+            $_SESSION['msg'] = array("type" => "error","msg" => "Debe estar registrado para valorar un producto");
+            return $res->withRedirect("/add-review/$product", 301);
+        }
+        $userId = $user->getId();
+        $multiplier = self::selectMultiplier($user->getRol());
         $points = $req->getParam('points');
+        if (!$points) {
+            $_SESSION['msg'] = array("type" => "error","msg" => "Debe dar una puntuación al producto");
+            return $res->withRedirect("/add-review/$product", 301);
+        }
         $comment = mb_strtolower($req->getParam('comment'));
 
         $reviewDao = new ReviewDao();
-        $result = $reviewDao->addReview($product, $user, $points, $comment);
+        $result = $reviewDao->addReview($product, $userId, $multiplier, $points, $comment);
 
         if (!$result) {
             $msg = $reviewDao->getError() ? $reviewDao->getError() : "Ha ocurrido un error al hacer una valoración";
-            echo $msg;
-//            return array("error" => $msg);
-        } else {
-            echo "Valoración añadida";
-//            return true;
+            $_SESSION['msg'] = array("type" => "error","msg" => $msg);
+            return $res->withRedirect("/add-review/$product", 301);
         }
-        echo "<br><a href='/'>Inicio</a>";
+        return $res->withRedirect("/product/$product", 301);
     }
 
     public function update($req, $res, $args) {
@@ -99,4 +107,18 @@ class ReviewController {
         }
     }
 
+    private function selectMultiplier($rol) {
+        $multiplier = 0;
+        switch ($rol) {
+            case 3:
+                $multiplier = 1;
+                break;
+            case 4:
+                $multiplier = 2;
+                break;
+            case 5:
+                $multiplier = 3;
+        }
+        return $multiplier;
+    }
 }

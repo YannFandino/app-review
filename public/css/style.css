@@ -425,6 +425,30 @@ div.main-box > div.wrapper > div.aside-form {
             background-color: #585365;
             outline: 1px solid slategrey;
         }
+
+/**
+    REVIEWS
+ */
+form.prod-info select {
+    display: none;
+}
+.review {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 16px 0;
+    padding: 16px 0;
+    border-top: 1px solid #585365;
+}
+    .review > * {
+        margin-bottom: 8px;
+    }
+    .review > p {
+        margin-bottom: 8px;
+    }
+    .review div:last-child > span {
+        font-size: 0.8em;
+        color: #707070;
+    }
 /**
     FOOTER
  */

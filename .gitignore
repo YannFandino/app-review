@@ -1,3 +1,4 @@
 /vendor/
 /.idea/
 /public/img/products
+.DS_Store

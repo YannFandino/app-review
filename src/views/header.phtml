@@ -38,10 +38,10 @@ if ($user) {
 foreach($c as $key => $category) {
     $parent = $category['parentInfo'];
     $children = $category['childs'];
-    $selected = (strrpos($uri, $parent->getId())) ? 'class="selected"' : '';
+    $selected = $uri == "/category/{$parent->getId()}" ? 'class="selected"' : '';
     echo "<li><a $selected href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
     if ($children) {
-        echo "<ul class='dropdown'>";
+        echo "<ul class='dropdown' style='height: auto;'>";
         foreach ($children as $child) {
             echo "<li class='dropdown-item'><a href='/category/{$child->getId()}'>{$child->getName()}</a></li>";
         }

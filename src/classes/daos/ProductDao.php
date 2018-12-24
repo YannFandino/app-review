@@ -192,8 +192,8 @@ class ProductDao {
         $db = $this->getDb();
         $list = array();
         $sql = "SELECT p.*,
-                       COUNT( DISTINCT r.id) as reviews,
-                       GROUP_CONCAT( DISTINCT i.url) as img,
+                       COUNT(DISTINCT r.id) as reviews,
+                       GROUP_CONCAT(DISTINCT i.url) as img,
                        (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
                 FROM table_products p
                 LEFT JOIN table_reviews r ON r.product_id = p.id
@@ -211,14 +211,42 @@ class ProductDao {
         return $list;
     }
 
+    public function getByCategory($id) {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT p.*,
+                       COUNT(DISTINCT r.id) as reviews,
+                       GROUP_CONCAT(DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
+                FROM table_products p
+                LEFT JOIN table_reviews r ON r.product_id = p.id
+                LEFT JOIN table_images i ON i.product_id = p.id
+                WHERE p.category_id = :id
+                GROUP BY p.id
+                ORDER BY p.id DESC";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $product = new Product($row);
+            array_push($list, $product);
+        };
+        return $list;
+    }
+
     public function getById($id) {
         $db = $this->getDb();
-        $sql = "SELECT p.*, GROUP_CONCAT(i.url) as img
+        $sql = "SELECT p.*,
+                       COUNT(DISTINCT r.id) as reviews,
+                       GROUP_CONCAT(DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
                 FROM table_products p
-                LEFT JOIN table_images i ON p.id = i.product_id
+                LEFT JOIN table_reviews r ON r.product_id = p.id
+                LEFT JOIN table_images i ON i.product_id = p.id
                 WHERE p.id = :id
                 GROUP BY p.id
-                ORDER BY i.url ASC";
+                ORDER BY p.id DESC";
         $stmt = $db->prepare($sql);
         $stmt->bindParam("id", $id, PDO::PARAM_INT);
         $stmt->execute();

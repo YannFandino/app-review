@@ -15,7 +15,7 @@
         </div>
         <div>
             <?php
-            echo "<img src='/public/img/products/{$product->getId()}/{$product->getImg()[0]}' width='432' height='432'>";
+            echo "<img id='large' src='/public/img/products/{$product->getId()}/{$product->getImg()[0]}' width='432' height='432'>";
             ?>
         </div>
     </div>
@@ -64,6 +64,10 @@ if (isset($reviews['error'])) {
     echo "<div style='text-align: center;padding: 8px;'>Deja la primera valoración.</div>";
 } else {
     foreach ($reviews as $review) {
+        $edit = "";
+        if ($user && $review->getUser() == $user->getId()) {
+            $edit = "<a href='/edit-review/{$review->getProduct()}'>Editar</a>";
+        }
     echo "<div class='review'>
               <h4>{$review->getUsername()}</h4>
               <div class='points'>";
@@ -82,6 +86,7 @@ if (isset($reviews['error'])) {
              <div>
                  <p>{$review->getComment()}</p>
              </div>
+             {$edit}
              <div>
                 <span>{$review->getDateCreated()}</span>
              </div>
@@ -113,6 +118,14 @@ if (isset($reviews['error'])) {
             } else {
                 fill(isClicked);
             }
+        });
+
+        let minis = document.querySelectorAll('.mini > img');
+        let large = document.getElementById('large');
+        minis.forEach((mini) => {
+            mini.addEventListener('click', (e) => {
+                large.src = mini.src;
+            });
         });
 
         function fill(qty) {

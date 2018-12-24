@@ -81,12 +81,6 @@ $app->get('/add-review/{id}', function (Request $req, Response $res, array $args
 });
 $app->post('/add-review/{id}', ReviewController::class.":add");
 
-// Listar
-$app->get('/list-review/{id}', function (Request $req, Response $res, array $args) {
-    $product = ProductController::getById($args['id']);
-    $reviews = ReviewController::listById($args['id']);
-    return $this->view->render($res, '/list-review.phtml', ["product" => $product, 'reviews' => $reviews]);
-});
 // Modificar
 $app->get('/edit-review/{id}', function (Request $req, Response $res, array $args) {
     $product = ProductController::getById($args['id']);
@@ -96,4 +90,10 @@ $app->get('/edit-review/{id}', function (Request $req, Response $res, array $arg
     return $this->view->render($res, '/edit-review.phtml', $viewArgs);
 });
 $app->post('/edit-review/{id}', ReviewController::class.":update");
+
+// Listar valoraciones por categorias
+$app->get('/category/{id}', function (Request $req, Response $res, array $args) {
+    $products = ProductController::getByCategory($args['id']);
+    return $this->view->render($res, 'list-review.phtml', ['products' => $products]);
+});
 ?>

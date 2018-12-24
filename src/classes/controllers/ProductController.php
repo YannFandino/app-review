@@ -126,6 +126,17 @@ class ProductController {
         return $product;
     }
 
+    public static function getByCategory($id) {
+        $productDao = new ProductDao();
+        $products = $productDao->getByCategory($id);
+
+        if (!$products) {
+            $msg = $productDao->getError() ? $productDao->getError() : "No hay productos para mostrar";
+            return array("error" => $msg);
+        }
+        return $products;
+    }
+
     public function delete($req, $res, $args) {
         $id = $req->getParam('id');
 

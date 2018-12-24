@@ -74,6 +74,8 @@ class ReviewDao {
         $db = $this->getDb();
         $db->beginTransaction();
         try {
+            if (!$points) throw new Exception("Debe dar una puntuación al producto");
+            if (!trim($comment)) throw new Exception("Debe escribir la valoración");
             $sql = "UPDATE table_reviews
                     SET points = :points,
                         comment = :comment,
@@ -119,7 +121,7 @@ class ReviewDao {
         $sql = "SELECT r.*, u.username
                 FROM table_reviews r
                 INNER JOIN table_users u ON r.user_id = u.id
-                WHERE product_id = 18";
+                WHERE product_id = :id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam('id', $id, PDO::PARAM_INT);
         $stmt->execute();

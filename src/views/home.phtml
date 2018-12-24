@@ -34,11 +34,11 @@
         <h3 title="<?php echo $product->getName() ?>"><?php echo $product->getName() ?></h3>
         <a class="rating-link" href='/add-review/<?php echo$product->getId() ?>'>
             <div class="rating" title="Hacer una valoración">
-                <span><?php echo number_format($product->getPoints(),1) ?></span>
+                <span><?php echo round($product->getPoints(),1) ?></span>
                 <i class='material-icons'>star</i>
             </div>
         </a>
-        <a href='/list-review/<?php echo $product->getId() ?>'>(<?php echo $nReviews ?>)</a>
+        <a href='/add-review/<?php echo $product->getId() ?>#reviews'>(<?php echo $nReviews ?>)</a>
         <div class="look">
             <a href="/product/<?php echo $product->getId() ?>">Ver más</a>
         </div>
@@ -83,7 +83,7 @@
             <h3 title="<?php echo $product->getName() ?>"><?php echo $product->getName() ?></h3>
             <a class="rating-link" href='/add-review/<?php echo$product->getId() ?>'>
                 <div class="rating" title="Hacer una valoración">
-                    <span><?php echo $product->getPoints() ?></span>
+                    <span><?php echo round($product->getPoints(), 1) ?></span>
                     <i class='material-icons'>star</i>
                 </div>
             </a>
@@ -117,7 +117,8 @@
         });
         function back(elem) {
             const id = elem.id.split('-').pop();
-            const slides = document.getElementById('track-'+id).children
+            // const slides = document.getElementById('track-'+id).children;
+            const slides = elem.parentElement.children[2].children;
             const minOffset = 0;
             for(let i=0;i < slides.length;i++) {
                 let position = parseInt(slides[i].style.left.replace('%',''))+100;
@@ -127,7 +128,8 @@
         }
         function next(elem) {
             const id = elem.id.split('-').pop();
-            const slides = document.getElementById('track-'+id).children
+            // const slides = document.getElementById('track-'+id).children;
+            const slides = elem.parentElement.children[2].children;
             const maxOffset = (slides.length * 100 - 100)*(-1);
             for(let i=0;i < slides.length;i++) {
                 let position = parseInt(slides[i].style.left.replace('%',''))-100;

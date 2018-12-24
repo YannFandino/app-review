@@ -34,6 +34,7 @@ class ReviewController {
 
     public function update($req, $res, $args) {
         $id = $req->getParam('id');
+        $product_id = $req->getParam('product_id');
         $points = $req->getParam('points');
         $comment = mb_strtolower($req->getParam('comment'));
 
@@ -41,10 +42,11 @@ class ReviewController {
         $result = $reviewDao->updateReview($id, $points, $comment);
 
         if (!$result) {
-            echo $reviewDao->getError();
-        } else {
-            echo "Modificada";
+            $_SESSION['msg'] = array("type" => "error", "msg" => $reviewDao->getError());
+            return $res->withRedirect("/edit-review/$product_id", 301);
         }
+        $_SESSION['msg'] = array("type" => "success", "msg" => "Valoración modificada");
+        return $res->withRedirect("/edit-review/$product_id", 301);
     }
 
     public function listAll($req, $res, $args) {

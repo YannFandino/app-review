@@ -18,11 +18,12 @@ if (isset($_SESSION['success'])) {
 }
 if (count($products) > 0 && !isset($products['error'])) {
     foreach ($products as $product) {
+        $points = round($product->getPoints(), 1);
         echo "<div class='list row product' id='{$product->getId()}'>
                   <div>{$product->getName()}</div>
                   <div>{$product->getCategory()}</div>
                   <div>{$product->getNReviews()}</div>
-                  <div>{$product->getPoints()}</div>
+                  <div>$points</div>
                   <div>
                     <a href='/admin/edit-product/{$product->getId()}'><!--
                         --><i class='material-icons'>edit</i><!--       

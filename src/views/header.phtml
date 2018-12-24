@@ -33,19 +33,21 @@ if ($user) {
         <ul>
             <li><a <?php if($uri === '/') echo "class='selected'" ?> href='/'>Inicio</a></li>
 <?php
-foreach($c as $key => $category) {
-    $parent = $category['parentInfo'];
-    $children = $category['childs'];
-    $selected = $uri == "/category/{$parent->getId()}" ? 'class="selected"' : '';
-    echo "<li><a $selected href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
-    if ($children) {
-        echo "<ul class='dropdown' style='height: auto;'>";
-        foreach ($children as $child) {
-            echo "<li class='dropdown-item'><a href='/category/{$child->getId()}'>{$child->getName()}</a></li>";
+if (!isset($c['error'])) {
+    foreach($c as $key => $category) {
+        $parent = $category['parentInfo'];
+        $children = $category['childs'];
+        $selected = $uri == "/category/{$parent->getId()}" ? 'class="selected"' : '';
+        echo "<li><a $selected href='/category/{$parent->getId()}'>{$parent->getName()}</a>";
+        if ($children) {
+            echo "<ul class='dropdown' style='height: auto;'>";
+            foreach ($children as $child) {
+                echo "<li class='dropdown-item'><a href='/category/{$child->getId()}'>{$child->getName()}</a></li>";
+            }
+            echo "</ul>";
         }
-        echo "</ul>";
+        echo "</li>";
     }
-    echo "</li>";
 }
 ?>
         </ul>

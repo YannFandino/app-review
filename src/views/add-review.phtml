@@ -105,12 +105,12 @@ if (isset($reviews['error'])) {
             });
             star.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.forms[0].elements[1].value = star.id;
+                document.forms[1].elements[1].value = star.id;
             });
         });
         let points = document.querySelectorAll('.points')[0];
         points.addEventListener('mouseout', () => {
-            let isClicked = document.forms[0].elements[1].value;
+            let isClicked = document.forms[1].elements[1].value;
             if (!isClicked) {
                 stars.forEach((star) => {
                     star.innerHTML = "star_border";

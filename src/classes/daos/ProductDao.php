@@ -177,6 +177,7 @@ class ProductDao {
                 LEFT JOIN table_images i ON i.product_id = p.id
                 WHERE r.points IS NOT NULL 
                 GROUP BY p.id
+                ORDER BY reviews DESC
                 LIMIT 4";
         $stmt = $db->prepare($sql);
         $stmt->execute();

@@ -213,6 +213,12 @@ class ProductDao {
 
     public function getByCategory($id) {
         $db = $this->getDb();
+
+        $ids = self::getChildrenCategories($id);
+        array_push($ids, $id);
+
+        $in = implode(',',$ids);
+
         $list = array();
         $sql = "SELECT p.*,
                        COUNT(DISTINCT r.id) as reviews,
@@ -221,17 +227,29 @@ class ProductDao {
                 FROM table_products p
                 LEFT JOIN table_reviews r ON r.product_id = p.id
                 LEFT JOIN table_images i ON i.product_id = p.id
-                WHERE p.category_id = :id
+                WHERE p.category_id IN ($in)
                 GROUP BY p.id
                 ORDER BY p.id DESC";
+
         $stmt = $db->prepare($sql);
-        $stmt->bindParam('id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         while ($row = $stmt->fetch()) {
             $product = new Product($row);
             array_push($list, $product);
         };
+        return $list;
+    }
+
+    private function getChildrenCategories($id) {
+        $db = $this->getDb();
+        $sql = "SELECT id FROM table_categories
+                WHERE parent = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $list = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
 

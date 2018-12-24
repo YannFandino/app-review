@@ -1,6 +1,7 @@
 <?php
 namespace Classes\controllers;
 use Classes\controllers\UserController;
+use Classes\daos\ProductDao;
 use Classes\models\User;
 
 class HomeController {
@@ -75,6 +76,17 @@ class HomeController {
         } else {
             return $res->withRedirect('/', 301);
         }
+    }
+
+    public function search($req, $res, $args) {
+        $args = explode(' ', $req->getParam('args'));
+        $pDao = new ProductDao();
+        $products = $pDao->search($args);
+
+        if (!$products) {
+            $products['error'] = "No se encontraron productos con esos criterios";
+        }
+        return $this->view->render($res, 'list-review.phtml', ['products' => $products]);;
     }
 
     private function checkData($args) {

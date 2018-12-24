@@ -291,6 +291,44 @@ class ProductDao {
         }
     }
 
+    public function search($args) {
+        $db = $this->getDb();
+        try {
+            $sql = "SELECT p.*,
+                       COUNT(DISTINCT r.id) as reviews,
+                       GROUP_CONCAT(DISTINCT i.url) as img,
+                       (SUM(r.points*r.multiplier)/SUM(r.multiplier)) as media
+                    FROM table_products p
+                    LEFT JOIN table_reviews r ON r.product_id = p.id
+                    LEFT JOIN table_images i ON i.product_id = p.id
+                    WHERE";
+            foreach ($args as $key => $arg) {
+                $upper = strtoupper($arg);
+                $or = $key == 0 ? "" : " OR";
+                $sql .= "$or UPPER(p.name) LIKE '%$upper%'
+                    OR UPPER(p.description) LIKE '%$upper%'
+                    OR UPPER(p.details) LIKE '%$upper%'";
+            }
+            $sql .= "GROUP BY p.id
+                     ORDER BY p.id DESC";
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $list = array();
+            while ($row = $stmt->fetch()) {
+                $product = new Product($row);
+                array_push($list, $product);
+            };
+            return $list;
+
+        } catch (Exception $e) {
+
+        };
+
+    }
+
     public function isProductExist($name) {
         $db = $this->getDb();
         $sql = "SELECT * FROM table_products c

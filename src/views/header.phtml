@@ -1,11 +1,14 @@
+<script>
+    function search() {
+        console.log(this);
+    }
+</script>
 <header>
-<?php
-?>
     <div class="info-bar">
-        <div class="search-box">
-            <input type="text" placeholder="Buscar...">
+        <form action="/search" method="get" class="search-box">
+            <input name="args" type="text" placeholder="Buscar...">
             <i class="material-icons">search</i>
-        </div>
+        </form>
         <div class="user-box">
 <?php
 if ($user) {

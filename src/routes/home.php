@@ -96,4 +96,7 @@ $app->get('/category/{id}', function (Request $req, Response $res, array $args) 
     $products = ProductController::getByCategory($args['id']);
     return $this->view->render($res, 'list-review.phtml', ['products' => $products]);
 });
+
+// Search
+$app->get('/search', HomeController::class.':search');
 ?>

@@ -52,5 +52,45 @@
 }
 ?>
 </div>
+<script>
+    window.onload = () => {
+        const ctrlBack = document.querySelectorAll('[id*=ctrl-bck]');
+        const ctrlForward = document.querySelectorAll('[id*=ctrl-frw]');
+        ctrlBack.forEach((control) => {
+            control.addEventListener('click', (e) => {
+                e.preventDefault();
+                back(control);
+            });
+        });
+        ctrlForward.forEach((control) => {
+            control.addEventListener('click', (e) => {
+                e.preventDefault();
+                next(control);
+            });
+        });
+        function back(elem) {
+            const id = elem.id.split('-').pop();
+            // const slides = document.getElementById('track-'+id).children;
+            const slides = elem.parentElement.children[2].children;
+            const minOffset = 0;
+            for(let i=0;i < slides.length;i++) {
+                let position = parseInt(slides[i].style.left.replace('%',''))+100;
+                if (i === 0 && position > minOffset) break;
+                slides[i].style.left = position+'%';
+            }
+        }
+        function next(elem) {
+            const id = elem.id.split('-').pop();
+            // const slides = document.getElementById('track-'+id).children;
+            const slides = elem.parentElement.children[2].children;
+            const maxOffset = (slides.length * 100 - 100)*(-1);
+            for(let i=0;i < slides.length;i++) {
+                let position = parseInt(slides[i].style.left.replace('%',''))-100;
+                if (position < maxOffset) break;
+                slides[i].style.left = position+'%';
+            }
+        }
+    }
+</script>
 
 <?php include __DIR__ . '/footer.phtml' ?>

@@ -14,7 +14,7 @@ USE app_review;
 -- Crear tablas de la base de datos
 CREATE TABLE IF NOT EXISTS table_categories (
 	id INT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(25) NOT NULL,
+	name VARCHAR(50) NOT NULL,
 	parent INT,
 	CONSTRAINT pk_categories PRIMARY KEY (id),
 	CONSTRAINT fk_parent_child FOREIGN KEY (parent) REFERENCES table_categories(id)
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS table_roles (
 CREATE TABLE IF NOT EXISTS table_users (
 	id INT NOT NULL AUTO_INCREMENT,
 	name VARCHAR(50) NOT NULL,
-	username VARCHAR(12) UNIQUE NOT NULL,
+	username VARCHAR(15) UNIQUE NOT NULL,
 	email VARCHAR(100) UNIQUE NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	date_registered DATE NOT NULL,
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS table_users (
 CREATE TABLE IF NOT EXISTS table_products (
 	id INT NOT NULL AUTO_INCREMENT,
 	name VARCHAR(100) NOT NULL UNIQUE,
-	description VARCHAR(100) NOT NULL,
-	details VARCHAR(100),
+	description TEXT NOT NULL,
+	details TEXT,
 	category_id INT NOT NULL,
 	CONSTRAINT pk_products PRIMARY KEY (id),
 	CONSTRAINT fk_products_categories FOREIGN KEY (category_id) REFERENCES table_categories(id)
@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS table_reviews (
   id INT NOT NULL AUTO_INCREMENT,
   product_id INT NOT NULL,
   user_id INT NOT NULL,
-  user_rol INT NOT NULL,
   multiplier INT NOT NULL,
   points FLOAT DEFAULT 0,
   comment VARCHAR(250),
@@ -77,4 +76,10 @@ INSERT INTO table_roles (name)
 VALUES ('admin'),('moderador'), ('novato'), ('intermedio'), ('experto');
 
 INSERT INTO table_users (name, username, email, password, date_registered, rol_id)
-VALUES ('admin','admin','admin@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 1);
+VALUES ('admin','admin','admin@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 1),
+VALUES ('José Pérez','novato1','novato1@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 3),
+VALUES ('Adrea Jiménez','intermedio1','intermedio1@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 4),
+VALUES ('Rodrigo García','experto1','experto1@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 5),
+VALUES ('María Gascón','novato2','novato2@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 1),
+VALUES ('Marta Rodríguez','intermedio2','intermedio2@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 2),
+VALUES ('Israel Camacho','experto2','experto2@appreview.com','$2y$10$yEfYe.wesUSwAsAgR59fdOt5BE3HocPwzppU8TgRWNwrVIuHyW3bK',CURRENT_DATE, 3);

@@ -37,7 +37,9 @@ class HomeController {
          * Verificar rol de usuario
          * Si este cumple las condiciones, subira de nivel.
          */
-        self::checkRole($user);
+        if ($user) {
+            self::checkRole($user);
+        }
 
         if (!$user) {
             $_SESSION['error'] = "Usuario no existe";

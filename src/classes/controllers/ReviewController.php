@@ -74,16 +74,47 @@ class ReviewController {
         }
     }
 
-    public static function listById($id) {
+    public static function listPending() {
+        $reviewDao = new ReviewDao();
+        $result = $reviewDao->getAllPending();
+
+        if (empty($result)) {
+            $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
+            return array("error" => $msg);
+        }
+        return $result;
+    }
+
+    public static function listByProductId($id) {
         $reviewDao = new ReviewDao();
         $result = $reviewDao->listById($id);
 
         if (empty($result)) {
             $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
             return array("error" => $msg);
-        } else {
-            return $result;
         }
+        return $result;
+    }
+
+    public static function getById($id) {
+        $reviewDao = new ReviewDao();
+        $result = $reviewDao->getById($id);
+
+        if (!$result) {
+            $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
+            return array("error" => $msg);
+        }
+        return $result;
+    }
+
+    public static function approve($id) {
+        $reviewDao = new ReviewDao();
+        $result = $reviewDao->approve($id);
+
+        if (!$result) {
+            return false;
+        }
+        return true;
     }
 
     public static function getByProductAndUser($product, $user) {
@@ -97,16 +128,16 @@ class ReviewController {
     }
 
     public function delete($req, $res, $args) {
-        $id = $args['id'];
+        $id = $req->getParam('id');
 
         $reviewDao = new ReviewDao();
         $result = $reviewDao->deleteById($id);
 
         if (!$result) {
-            echo $reviewDao->getError();
-        } else {
-            echo "Eliminada";
+            $_SESSION['error'] = "Ha ocurido un error";
+            return $res->withRedirect("/admin/review/$id", 301);
         }
+        return $res->withRedirect('/admin/reviews/', 301);
     }
 
     private function selectMultiplier($rol) {

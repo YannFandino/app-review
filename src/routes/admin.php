@@ -3,6 +3,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Classes\controllers\CategoryController;
 use Classes\controllers\ProductController;
+use Classes\controllers\ReviewController;
 use Classes\controllers\UserController;
 use Classes\controllers\AdminController;
 
@@ -52,4 +53,27 @@ $app->post('/admin/products', AdminController::class.":addProduct");
 $app->post('/admin/edit-product', ProductController::class.":update");
 $app->post('/admin/edit-img', ProductController::class.":updateImg");
 $app->post('/admin/delete-product', ProductController::class.":delete");
+
+// Valoraciones
+// Listar valoraciones por categorias
+$app->get('/admin/reviews', function (Request $req, Response $res, array $args) {
+    $reviews = ReviewController::listPending();
+    return $this->view->render($res, '/admin/reviews.phtml', ['reviews' => $reviews]);
+});
+$app->get('/admin/review/{id}', function (Request $req, Response $res, array $args) {
+    $review = ReviewController::getById($args['id']);
+    return $this->view->render($res, '/admin/moderate.phtml', ['review' => $review]);
+});
+$app->post('/admin/review/{id}', function (Request $req, Response $res, array $args) {
+    $review = ReviewController::getById($args['id']);
+    $isOk = ReviewController::approve($args['id']);
+    if (!$isOk)
+        $msg = "Ha ocurrido un error";
+    else
+        $msg = "Valoración aprovada";
+
+    return $this->view->render($res, '/admin/moderate.phtml', ['review' => $review, "msg" => $msg]);
+});
+
+$app->post('/admin/del-review', ReviewController::class.":delete");
 ?>

@@ -115,6 +115,24 @@ class ReviewDao {
         return $list;
     }
 
+    public function getAllPending() {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT r.*, u.username
+                FROM table_reviews r
+                INNER JOIN table_users u on r.user_id = u.id
+                WHERE r.is_approved IS FALSE
+                ORDER BY r.date_created ASC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $review = new Review($row);
+            $list[$review->getId()] = $review;
+        };
+        return $list;
+    }
+
     public function listById($id) {
         $db = $this->getDb();
         $list = array();
@@ -131,6 +149,47 @@ class ReviewDao {
             array_push($list, $review);
         };
         return $list;
+    }
+
+    public function getById($id) {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT r.*, u.username
+                FROM table_reviews r
+                INNER JOIN table_users u ON r.user_id = u.id
+                WHERE r.id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        if ($row) return new Review($row);
+        return false;
+    }
+
+    public function approve($id) {
+        $db = $this->getDb();
+        $db->beginTransaction();
+        try {
+            if (!$id) throw new Exception("Ha ocurrido un error.");
+            $sql = "UPDATE table_reviews
+                    SET is_approved = TRUE
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result) {
+                $db->commit();
+                return true;
+            } else throw new Exception('Ha ocurrido un error al aprobar la valoración');
+
+        } catch (Exception $e) {
+            $db->rollBack();
+            $this->setError($e->getMessage());
+            return false;
+        }
     }
 
     public function deleteById($id) {

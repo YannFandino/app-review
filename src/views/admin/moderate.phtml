@@ -1,0 +1,52 @@
+<?php include __DIR__ . '/../layout.phtml' ?>
+<?php include __DIR__ . '/header.phtml' ?>
+<link rel="stylesheet" href="/public/css/admin-styles.css">
+<div class="list column">
+    <h2 class="list-title admin-title" style="margin: 0 auto; padding: 24px; box-sizing: border-box; width: 50%"><i class="material-icons">check_circle</i>Moderar valoración</h2>
+    <form class="edit" action="" method="post" style="margin: 16px auto">
+        <input type="hidden" name="id" id="id" value="<?php echo $review->getId() ?>">
+        <div class="form-group">
+            <select name="points" disabled>
+                <option value="">Puntos</option>
+                <option value="1" <?php if ($review->getPoints() == 1) echo "selected" ?>>1</option>
+                <option value="2" <?php if ($review->getPoints() == 2) echo "selected" ?>>2</option>
+                <option value="3" <?php if ($review->getPoints() == 3) echo "selected" ?>>3</option>
+                <option value="4" <?php if ($review->getPoints() == 4) echo "selected" ?>>4</option>
+                <option value="5" <?php if ($review->getPoints() == 5) echo "selected" ?>>5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <textarea name="comment" readonly
+                      placeholder="Comentario del producto"><?php echo $review->getComment() ?></textarea>
+        </div>
+        <button class="btn btn-light" type="submit">Aprobar</button>
+        <?php
+        if (isset($msg)) {
+            echo "<div>$msg</div>";
+        }
+        if (isset($_SESSION['error'])) {
+            echo "<div>{$_SESSION['error']}</div>";
+            unset($_SESSION['error']);
+        }
+        ?>
+    </form>
+    <form class="edit delete" action="/admin/del-review/"
+          method="post">
+        <input type="hidden" name="id" id="id" value="<?php echo $review->getId() ?>">
+        <button class="link"  id="delete" href="">Eliminar</button>
+    </form>
+
+</div>
+<script>
+    window.onload = () => {
+        let btn = document.getElementById('delete');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let confirm = window.confirm('¿Está seguro de elimnar la valoración?');
+            if (confirm) {
+                btn.parentElement.submit();
+            }
+        });
+    }
+</script>
+<?php include __DIR__ . '/../footer.phtml' ?>

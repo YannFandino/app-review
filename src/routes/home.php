@@ -66,7 +66,7 @@ $app->get('/logout', HomeController::class.":logout");
 // Detalle de producto
 $app->get('/product/{id}', function (Request $req, Response $res, array $args) {
     $product = ProductController::getById($args['id']);
-    $reviews = ReviewController::listById($args['id']);
+    $reviews = ReviewController::listByProductId($args['id']);
     $args = array("product" => $product, 'reviews' => $reviews);
     return $this->view->render($res, '/details.phtml', $args);
 });
@@ -75,7 +75,7 @@ $app->get('/product/{id}', function (Request $req, Response $res, array $args) {
 // Añadir
 $app->get('/add-review/{id}', function (Request $req, Response $res, array $args) {
     $product = ProductController::getById($args['id']);
-    $reviews = ReviewController::listById($args['id']);
+    $reviews = ReviewController::listByProductId($args['id']);
     $args = array("product" => $product, 'reviews' => $reviews);
     return $this->view->render($res, '/add-review.phtml', $args);
 });

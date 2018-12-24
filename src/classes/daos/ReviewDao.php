@@ -169,6 +169,21 @@ class ReviewDao {
         return false;
     }
 
+    public function getCountByUser($id) {
+        $db = $this->getDb();
+        $list = array();
+        $sql = "SELECT COUNT(1) as 'count'
+                FROM table_reviews r
+                WHERE r.user_id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam('id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+
+        return $result;
+    }
+
     public function approve($id) {
         $db = $this->getDb();
         $db->beginTransaction();

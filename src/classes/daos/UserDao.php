@@ -104,7 +104,7 @@ class UserDao {
             if ($name) $sql .= " name = :name,";
             if ($email) $sql .= " email = :email,";
             if ($password) $sql .= " password = :password,";
-            if ($role_id) $sql .= " rol_id = :role_id,";
+            if ($role_id) $sql .= " rol_id = :rol_id,";
             $sql = substr($sql, 0, strlen($sql)-1);
             $sql .= " WHERE id = :id";
 
@@ -112,7 +112,7 @@ class UserDao {
             if ($name) $stmt->bindParam('name', $name);
             if ($email) $stmt->bindParam('email', $email);
             if ($password) $stmt->bindParam('password', $password);
-            if ($role_id) $stmt->bindParam('rol_id', $role_id);
+            if ($role_id) $stmt->bindParam('rol_id', $role_id, PDO::PARAM_INT);
             $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
 
@@ -122,6 +122,7 @@ class UserDao {
             } else throw new Exception('Ha ocurrido un error al modificar el usuario');
         } catch (Exception $e) {
             $db->rollBack();
+
             switch ($e->getCode()) {
                 case '23000':
                     $this->setError('Debe seleccionar un rol válido.');

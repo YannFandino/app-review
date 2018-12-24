@@ -2,9 +2,18 @@
 namespace Classes\controllers;
 use Classes\controllers\UserController;
 use Classes\daos\ProductDao;
+use Classes\daos\ReviewDao;
+use Classes\daos\UserDao;
 use Classes\models\User;
 
 class HomeController {
+
+    const LEVEL_1_SENIORITY = 180;
+    const LEVEL_2_SENIORITY = 730;
+    const LEVEL_1_POSTS = 25;
+    const LEVEL_2_POSTS = 50;
+    const ROLE_ADMIN = 1;
+    const ROLE_MOD = 2;
 
     private $view;
 
@@ -23,6 +32,12 @@ class HomeController {
 
         $userController = new UserController();
         $user = $userController->getByUsername($username);
+
+        /**
+         * Verificar rol de usuario
+         * Si este cumple las condiciones, subira de nivel.
+         */
+        self::checkRole($user);
 
         if (!$user) {
             $_SESSION['error'] = "Usuario no existe";
@@ -75,6 +90,38 @@ class HomeController {
             return $res->withRedirect('admin/panel', 301);
         } else {
             return $res->withRedirect('/', 301);
+        }
+    }
+
+    private function checkRole(User $user) {
+        $userRol = $user->getRol();
+        if ($userRol == self::ROLE_ADMIN || $userRol == self::ROLE_MOD)
+            return;
+
+        $id = $user->getId();
+        $dateRegistered = strtotime($user->getDateRegistered());
+        $seniority = round((time() - $dateRegistered)/(60 * 60 * 24));
+
+        $rDao = new ReviewDao();
+        $reviews = $rDao->getCountByUser($id)['count'];
+
+        if (($seniority > self::LEVEL_2_SENIORITY) && $reviews > self::LEVEL_2_POSTS) {
+            // Antiguedad mas de dos años y mas de 50 valoraciones
+            $rol = 5;
+        } elseif (($seniority > self::LEVEL_1_SENIORITY && $seniority <= self::LEVEL_2_SENIORITY) &&
+                  ($reviews > self::LEVEL_1_POSTS && $reviews <= self::LEVEL_2_POSTS)) {
+            // Antiguedad entre 6 meses y 2 años, y entre 25 y 50 valoraciones
+            $rol = 4;
+        } elseif ($seniority <= self::LEVEL_1_SENIORITY && $reviews <= self::LEVEL_1_POSTS) {
+            // Antiguedad menor a 6 meses y menos de 25 valoraciones
+            $rol = 3;
+        } else {
+            $rol = $userRol;
+        }
+
+        if ($userRol < $rol) {
+            $uDao = new UserDao();
+            $uDao->updateUser($id, null, null, null, $rol);
         }
     }
 

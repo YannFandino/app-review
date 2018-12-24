@@ -102,14 +102,15 @@ class ReviewDao {
     public function getAll() {
         $db = $this->getDb();
         $list = array();
-        $sql = "SELECT product_id, user_id, points, comment, date_created, last_modified, is_approved
-                FROM table_reviews 
-                ORDER BY name ASC";
+        $sql = "SELECT r.*, u.username
+                FROM table_reviews r
+                INNER JOIN table_users u ON r.user_id = u.id
+                ORDER BY r.product_id,r.date_created ASC";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
         while ($row = $stmt->fetch()) {
-            $review = new Review(null, $row['id'], $row['product_id'], $row['user_id'], $row['points'], $row['comment'], $row['date_created'], $row['last_modified'], $row['is_approved']);
+            $review = new Review($row);
             $list[$review->getId()] = $review;
             };
         return $list;
@@ -120,7 +121,7 @@ class ReviewDao {
         $list = array();
         $sql = "SELECT r.*, u.username
                 FROM table_reviews r
-                INNER JOIN table_users u on r.user_id = u.id
+                INNER JOIN table_users u ON r.user_id = u.id
                 WHERE r.is_approved IS FALSE
                 ORDER BY r.date_created ASC";
         $stmt = $db->prepare($sql);

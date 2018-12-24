@@ -49,29 +49,15 @@ class ReviewController {
         return $res->withRedirect("/edit-review/$product_id", 301);
     }
 
-    public function listAll($req, $res, $args) {
+    public static function listAll() {
         $reviewDao = new ReviewDao();
         $result = $reviewDao->getAll();
 
         if (empty($result)) {
             $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
-            echo $msg;
-        } else {
-            echo "<ul>";
-            foreach ($result as $arrayReview) {
-                echo "<strong>{$arrayReview->getId()}</strong>";
-                echo "<ul>";
-                echo "<li>{$arrayReview->getProduct()}</li>";
-                echo "<li>{$arrayReview->getUser()}</li>";
-                echo "<li>{$arrayReview->getPoints()}</li>";
-                echo "<li>{$arrayReview->getComment()}</li>";
-                echo "<li>{$arrayReview->getDateCreated()}</li>";
-                echo "<li>{$arrayReview->getLastModified()}</li>";
-                echo "<li>{$arrayReview->getisApproved()}</li>";
-                echo "</ul>";
-            }
-            echo "</ul>";
+            return array("error" => $msg);
         }
+        return $result;
     }
 
     public static function listPending() {
@@ -102,7 +88,8 @@ class ReviewController {
 
         if (!$result) {
             $msg = $reviewDao->getError() ? $reviewDao->getError() : "No hay valoraciones para mostrar";
-            return array("error" => $msg);
+            $_SESSION['error'] = $msg;
+            return false;
         }
         return $result;
     }

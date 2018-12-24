@@ -141,7 +141,8 @@ h2.list-title.admin-title {
 
 
 .link {
-    background-color: transparent;
+    background-color: transparent !important;
+    color: black !important;
     border: none;
     cursor: pointer;
     text-decoration: underline;

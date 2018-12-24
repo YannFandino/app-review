@@ -60,6 +60,10 @@ $app->get('/admin/reviews', function (Request $req, Response $res, array $args) 
     $reviews = ReviewController::listPending();
     return $this->view->render($res, '/admin/reviews.phtml', ['reviews' => $reviews]);
 });
+$app->get('/admin/reviews/all', function (Request $req, Response $res, array $args) {
+    $reviews = ReviewController::listAll();
+    return $this->view->render($res, '/admin/all-reviews.phtml', ['reviews' => $reviews]);
+});
 $app->get('/admin/review/{id}', function (Request $req, Response $res, array $args) {
     $review = ReviewController::getById($args['id']);
     return $this->view->render($res, '/admin/moderate.phtml', ['review' => $review]);

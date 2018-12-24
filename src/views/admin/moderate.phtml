@@ -4,6 +4,7 @@
 <div class="list column">
     <h2 class="list-title admin-title" style="margin: 0 auto; padding: 24px; box-sizing: border-box; width: 50%"><i class="material-icons">check_circle</i>Moderar valoración</h2>
     <form class="edit" action="" method="post" style="margin: 16px auto">
+    <?php if (!isset($_SESSION['error'])) { ?>
         <input type="hidden" name="id" id="id" value="<?php echo $review->getId() ?>">
         <div class="form-group">
             <select name="points" disabled>
@@ -20,21 +21,18 @@
                       placeholder="Comentario del producto"><?php echo $review->getComment() ?></textarea>
         </div>
         <button class="btn btn-light" type="submit">Aprobar</button>
-        <?php
-        if (isset($msg)) {
-            echo "<div>$msg</div>";
-        }
-        if (isset($_SESSION['error'])) {
-            echo "<div>{$_SESSION['error']}</div>";
-            unset($_SESSION['error']);
-        }
-        ?>
     </form>
     <form class="edit delete" action="/admin/del-review/"
           method="post">
         <input type="hidden" name="id" id="id" value="<?php echo $review->getId() ?>">
         <button class="link"  id="delete" href="">Eliminar</button>
     </form>
+    <?php
+    } else {
+        echo "<div>{$_SESSION['error']}</div>";
+        unset($_SESSION['error']);
+    }
+    ?>
 
 </div>
 <script>
